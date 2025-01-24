@@ -1,4 +1,3 @@
-
 #include <imgui.h>
 #include <array>
 #include <vector>
@@ -6,6 +5,7 @@
 #include "C.hpp"
 #include "Game.hpp"
 
+#include "Entity.hpp"
 #include "HotReloadShader.hpp"
 
 
@@ -41,6 +41,8 @@ Game::Game(sf::RenderWindow * win) {
 	walls.push_back(Vector2i(cols >>2, lastLine - 4));
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
+
+	entities.emplace_back(new Entity(690, 420, sf::RectangleShape({16, 32})));
 }
 
 void Game::cacheWalls()
@@ -122,6 +124,8 @@ void Game::update(double dt) {
 
 	beforeParts.update(dt);
 	afterParts.update(dt);
+
+	for(auto entity : entities) entity->update(dt);
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -138,13 +142,15 @@ void Game::update(double dt) {
 
 	beforeParts.draw(win);
 
-	for (sf::RectangleShape & r : wallSprites)
+	for (sf::RectangleShape  const& r : wallSprites)
 		win.draw(r);
 
-	for (sf::RectangleShape& r : rects) 
+	for (sf::RectangleShape const& r : rects) 
 		win.draw(r);
 	
-
+	for(const auto entity : entities)
+		win.draw(entity->shape);
+	
 	afterParts.draw(win);
 }
 
@@ -164,6 +170,7 @@ bool Game::isWall(int cx, int cy)
 
 void Game::im()
 {
-
+	for(const auto entity : entities)
+		entity->im();
 }
 

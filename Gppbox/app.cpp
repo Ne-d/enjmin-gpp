@@ -21,7 +21,11 @@
 
 
 #define WIN32_LEAN_AND_MEAN
+#include <imgui_internal.h>
 #include <Windows.h>
+
+#include "C.hpp"
+
 extern "C" {
 	// Force the use of the NVidia-graphics card on notebooks with both an IGP and a GPU
 	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -44,8 +48,10 @@ int main()
 	
     //sf::RenderWindow window(sf::VideoMode(1920, 1080,32), "SFML works!");
     //sf::RenderWindow window(sf::VideoMode(800, 600,32), "SFML works!");
-    sf::RenderWindow window(sf::VideoMode(1280, 720,32), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(C::RESOLUTION_X, C::RESOLUTION_Y,32), "SFML works!");
 	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(60);
+	
     Font font;
 
     if (!font.loadFromFile("res/MAIAN.TTF")) {
@@ -124,7 +130,8 @@ int main()
 		}
 
 		//don't use imgui before this;
-		ImGui::SFML::Update(window, sf::seconds((float)dt));
+    	ImGui::SFML::Update(window, sf::seconds((float)dt));
+    	ImGui::SetWindowFontScale(1.75);
 
         g.update(dt);
 		

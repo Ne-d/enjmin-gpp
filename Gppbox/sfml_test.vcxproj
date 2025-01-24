@@ -182,7 +182,7 @@
     <ClInclude Include="Bloom.hpp" />
     <ClInclude Include="C.hpp" />
     <ClInclude Include="Dice.hpp" />
-    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HotReloadShader.hpp" />
     <ClInclude Include="Interp.hpp" />

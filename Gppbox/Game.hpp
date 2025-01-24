@@ -11,6 +11,7 @@
 #include "Particle.hpp"
 #include "ParticleMan.hpp"
 
+class Entity;
 using namespace sf;
 
 class HotReloadShader;
@@ -27,6 +28,7 @@ public:
 	
 	std::vector<sf::Vector2i>		walls;
 	std::vector<sf::RectangleShape> wallSprites;
+	std::vector<Entity*>			entities;
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
