@@ -9,8 +9,8 @@
 #include "HotReloadShader.hpp"
 
 
-static int cols = 1280 / C::GRID_SIZE;
-static int lastLine = 720 / C::GRID_SIZE - 1;
+static int cols = C::RESOLUTION_X / C::GRID_SIZE;
+static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
 
 Game::Game(sf::RenderWindow * win) {
 	this->win = win;
@@ -21,11 +21,11 @@ Game::Game(sf::RenderWindow * win) {
 		printf("ERR : LOAD FAILED\n");
 	}
 	bg.setTexture(&tex);
-	bg.setSize(sf::Vector2f(1280, 720));
+	bg.setSize(sf::Vector2f(C::RESOLUTION_X, C::RESOLUTION_Y));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 	
-	for (int i = 0; i < 1280 / C::GRID_SIZE; ++i) 
+	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i) 
 		walls.push_back( Vector2i(i, lastLine) );
 
 	walls.push_back(Vector2i(0, lastLine-1));
