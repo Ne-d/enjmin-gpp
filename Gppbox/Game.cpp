@@ -7,6 +7,7 @@
 
 #include "Entity.hpp"
 #include "HotReloadShader.hpp"
+#include "Player.hpp"
 
 
 static int cols = C::RESOLUTION_X / C::GRID_SIZE;
@@ -42,7 +43,7 @@ Game::Game(sf::RenderWindow * win) {
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
 
-	entities.emplace_back(new Entity(690, 420, sf::RectangleShape({16, 32})));
+	entities.emplace_back(new Player(69, 42, sf::RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
 }
 
 void Game::cacheWalls()
@@ -74,23 +75,20 @@ static double g_tickTimer = 0.0;
 
 
 void Game::pollInput(double dt) {
-
+	Entity* player = entities.front();
+	
 	float lateralSpeed = 8.0;
 	float maxSpeed = 40.0;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
 		if (!wasPressed) {
@@ -101,7 +99,6 @@ void Game::pollInput(double dt) {
 	else {
 		wasPressed = false;
 	}
-
 }
 
 static sf::VertexArray va;

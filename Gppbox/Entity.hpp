@@ -4,8 +4,10 @@
 
 class Entity
 {
-public: // Methods
+public:
+	// Methods
 	explicit Entity(float x, float y, sf::RectangleShape shape);
+	virtual ~Entity() = default;
 
 	void setPixelPosition(int x, int y);
 	
@@ -13,13 +15,15 @@ public: // Methods
 	void setGridVelocity(float x, float y);
 
 	sf::Vector2i getPixelPosition() const;
+	bool hasCollision(int x, int y);
 
-private:
+protected:
 	void syncShape();
+	void fixGridPosition();
 
 public:
 	// Data
-	void update(double deltaTime);
+	virtual void update(double deltaTime);
 
 	// Base coordinates
 	int cx = 0;

@@ -38,11 +38,44 @@ void Entity::setGridVelocity(const float x, const float y) {
 }
 
 sf::Vector2i Entity::getPixelPosition() const {
-	return sf::Vector2i((int)(cx + rx), (int)(cy + ry));
+	return sf::Vector2i(
+		(cx + rx) * C::GRID_SIZE,
+		(cy + ry) * C::GRID_SIZE
+	);
+}
+
+bool Entity::hasCollision(int x, int y) {
+	if (x < 0 || y < 0 || x > C::RESOLUTION_X * C::GRID_SIZE || y > C::RESOLUTION_Y * C::GRID_SIZE)
+		return true;
+
+	return false;
 }
 
 void Entity::syncShape() {
-	shape.setPosition(cx + rx, cy + ry);
+	shape.setPosition(
+		(cx + rx - 0.5) * C::GRID_SIZE,
+		(cy + ry - 2) * C::GRID_SIZE
+	);
+}
+
+void Entity::fixGridPosition() {
+	while (rx >= 1) {
+		cx++;
+		rx--;
+	}
+	while (rx < 0) {
+		cx--;
+		rx++;
+	}
+
+	while (ry >= 1) {
+		cy++;
+		ry--;
+	}
+	while (ry < 0) {
+		cy--;
+		ry++;
+	}
 }
 
 void Entity::update(const double deltaTime) {
@@ -52,9 +85,7 @@ void Entity::update(const double deltaTime) {
 	rx += dx * deltaFrame;
 	ry += dy * deltaFrame;
 
-	dx *= pow(frx, deltaFrame);
-	dy *= pow(fry, deltaFrame);
-	
+	fixGridPosition();
 	syncShape();
 }
 
@@ -80,7 +111,7 @@ bool Entity::im() {
 
 	sf::Vector2f velocity = {dx, dy};
 	bool velocityChanged = false;
-	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -10, 10);
+	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -0.5, 0.5);
 	if(velocityChanged) setGridVelocity(velocity.x, velocity.y);
 
 	return pixelChanged || gridChanged || velocityChanged;

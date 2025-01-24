@@ -131,12 +131,15 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MinimalRebuild>false</MinimalRebuild>
+        <MultiProcessorCompilation>true</MultiProcessorCompilation>
+        <AdditionalOptions>/ZI</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;openal32.lib;ogg.lib;freetype.lib;flac.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+        <AdditionalOptions>/ZI</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,6 +178,7 @@
     <ClCompile Include="libs\imgui\imgui_widgets.cpp" />
     <ClCompile Include="app.cpp" />
     <ClCompile Include="Particle.cpp" />
+      <ClCompile Include="Player.cpp"/>
     <ClCompile Include="sys.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +196,7 @@
     <ClInclude Include="libs\imgui\imgui.h" />
     <ClInclude Include="Particle.hpp" />
     <ClInclude Include="ParticleMan.hpp" />
+      <ClInclude Include="Player.hpp"/>
     <ClInclude Include="sys.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
