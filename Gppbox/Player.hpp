@@ -19,5 +19,5 @@ private:
 	bool jumpInput;
 
 	// Gameplay data
-	float moveSpeed = 0.8f;
+	float moveSpeed = 1.0f;
 };

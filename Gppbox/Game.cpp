@@ -13,6 +13,12 @@
 static int cols = C::RESOLUTION_X / C::GRID_SIZE;
 static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
 
+Game* Game::instance = nullptr;
+
+Game* Game::getInstance() {
+	return instance;
+}
+
 Game::Game(sf::RenderWindow * win) {
 	this->win = win;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
@@ -25,21 +31,21 @@ Game::Game(sf::RenderWindow * win) {
 	bg.setSize(sf::Vector2f(C::RESOLUTION_X, C::RESOLUTION_Y));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
-	
-	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i) 
-		walls.push_back( Vector2i(i, lastLine) );
 
-	walls.push_back(Vector2i(0, lastLine-1));
-	walls.push_back(Vector2i(0, lastLine-2));
-	walls.push_back(Vector2i(0, lastLine-3));
+	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i)
+		walls.push_back(Vector2i(i, lastLine));
 
-	walls.push_back(Vector2i(cols-1, lastLine - 1));
-	walls.push_back(Vector2i(cols-1, lastLine - 2));
-	walls.push_back(Vector2i(cols-1, lastLine - 3));
+	walls.push_back(Vector2i(0, lastLine - 1));
+	walls.push_back(Vector2i(0, lastLine - 2));
+	walls.push_back(Vector2i(0, lastLine - 3));
 
-	walls.push_back(Vector2i(cols >>2, lastLine - 2));
-	walls.push_back(Vector2i(cols >>2, lastLine - 3));
-	walls.push_back(Vector2i(cols >>2, lastLine - 4));
+	walls.push_back(Vector2i(cols - 1, lastLine - 1));
+	walls.push_back(Vector2i(cols - 1, lastLine - 2));
+	walls.push_back(Vector2i(cols - 1, lastLine - 3));
+
+	walls.push_back(Vector2i(cols >> 2, lastLine - 2));
+	walls.push_back(Vector2i(cols >> 2, lastLine - 3));
+	walls.push_back(Vector2i(cols >> 2, lastLine - 4));
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
 	cacheWalls();
 
@@ -49,12 +55,33 @@ Game::Game(sf::RenderWindow * win) {
 void Game::cacheWalls()
 {
 	wallSprites.clear();
-	for (Vector2i & w : walls) {
+	for (Vector2i w : walls) {
 		sf::RectangleShape rect(Vector2f(16,16));
 		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
 		rect.setFillColor(sf::Color(0x07ff07ff));
 		wallSprites.push_back(rect);
 	}
+}
+
+bool Game::hasCollision(const int gridX, const int gridY) {
+	if (gridX < 0)
+		return true;
+
+	constexpr int screenBoundRight = C::RESOLUTION_X / C::GRID_SIZE - 1;
+	if (gridX > screenBoundRight)
+		return true;
+
+	if (gridY < 0)
+		return true;
+
+	constexpr int screenBoundBottom = C::RESOLUTION_Y / C::GRID_SIZE - 1;
+	if (gridY > screenBoundBottom)
+		return true;
+
+	//if (isWall(gridX, gridY))
+	//	return true;
+
+	return false;
 }
 
 void Game::processInput(sf::Event ev) {
@@ -158,7 +185,7 @@ void Game::onSpacePressed() {
 
 bool Game::isWall(int cx, int cy)
 {
-	for (Vector2i & w : walls) {
+	for (Vector2i& w : walls) {
 		if (w.x == cx && w.y == cy)
 			return true;
 	}

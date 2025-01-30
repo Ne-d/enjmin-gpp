@@ -12,11 +12,12 @@
 #include "ParticleMan.hpp"
 
 class Entity;
-using namespace sf;
 
 class HotReloadShader;
 class Game {
 public:
+	static Game* getInstance();
+	
 	sf::RenderWindow*				win = nullptr;
 
 	sf::RectangleShape				bg;
@@ -25,8 +26,8 @@ public:
 	sf::Texture						tex;
 
 	bool							closing = false;
-	
-	std::vector<sf::Vector2i>		walls;
+
+	std::vector<sf::Vector2i> walls;
 	std::vector<sf::RectangleShape> wallSprites;
 	std::vector<Entity*>			entities;
 
@@ -36,6 +37,7 @@ public:
 	Game(sf::RenderWindow * win);
 
 	void cacheWalls();
+	bool hasCollision(int gridX, int gridY);
 
 	void processInput(sf::Event ev);
 	bool wasPressed = false;
@@ -48,4 +50,7 @@ public:
 
 	bool isWall(int cx, int cy);
 	void im();
+
+private:
+	static Game* instance;
 };

@@ -15,11 +15,10 @@ public:
 	void setGridVelocity(float x, float y);
 
 	sf::Vector2i getPixelPosition() const;
-	bool hasCollision(int x, int y);
 
 protected:
 	void syncShape();
-	void fixGridPosition();
+	void updatePosition(double deltaFrame);
 
 public:
 	// Data
@@ -36,7 +35,10 @@ public:
 	float dy = 0;
 	float frx = 0.91f;
 	float fry = 0.91f;
+	float gravity = 1.0f;
 
+	bool jumping = false;
+	
 	// Graphics
 	sf::RectangleShape shape;
 	bool im();

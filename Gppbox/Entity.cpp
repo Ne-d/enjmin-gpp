@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 
+#include "Game.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
 
@@ -44,12 +45,6 @@ sf::Vector2i Entity::getPixelPosition() const {
 	);
 }
 
-bool Entity::hasCollision(int x, int y) {
-	if (x < 0 || y < 0 || x > C::RESOLUTION_X * C::GRID_SIZE || y > C::RESOLUTION_Y * C::GRID_SIZE)
-		return true;
-
-	return false;
-}
 
 void Entity::syncShape() {
 	shape.setPosition(
@@ -58,35 +53,82 @@ void Entity::syncShape() {
 	);
 }
 
-void Entity::fixGridPosition() {
-	while (rx >= 1) {
-		cx++;
-		rx--;
+void Entity::updatePosition(const double deltaFrame) {
+	// Integrate position based on velocity
+	rx += dx * deltaFrame;
+	ry += dy * deltaFrame;
+
+	Game* game = Game::getInstance();
+
+	// Collisions
+	constexpr float collisionThresholdX = 0.5f;
+
+	// X(-) Movement collisions
+	do {
+		if (game->hasCollision(cx - 1, cy) && rx <= collisionThresholdX) {
+			rx = collisionThresholdX;
+			dx = 0.0f;
+		}
+		if (rx < 0.0f) {
+			cx--;
+			rx++;
+		}
 	}
-	while (rx < 0) {
-		cx--;
-		rx++;
+	while (rx < 0.0f);
+
+	// X(+) Movement collisions
+	do {
+		if (game->hasCollision(cx + 1, cy) && rx >= collisionThresholdX) {
+			rx = collisionThresholdX;
+			dx = 0.0f;
+		}
+		if (rx > 1.0f) {
+			cx++;
+			rx--;
+		}
+	}
+	while (rx > 1.0f);
+
+	if (jumping) {
+		// Gravity
+		dy += gravity * deltaFrame;
+
+		// Y(-) Movement collisions
+		do {
+			if (game->hasCollision(cx, cy - 2) && ry <= 1.0f) {
+				ry = 1.0f;
+				dy = 0.0f;
+			}
+			if (ry < 0.0f) {
+				cy--;
+				ry++;
+			}
+		}
+		while (ry < 0.0f);
+
+		// Y(+) Movement collisions
+		do {
+			if (game->hasCollision(cx, cy + 1) && ry >= 0.99f) {
+				ry = 0.99f;
+				dy = 0.0f;
+				jumping = false;
+			}
+			if (ry > 1.0f) {
+				cy++;
+				ry--;
+			}
+		}
+		while (ry > 1.0f);
 	}
 
-	while (ry >= 1) {
-		cy++;
-		ry--;
-	}
-	while (ry < 0) {
-		cy--;
-		ry++;
-	}
+	syncShape();
 }
 
 void Entity::update(const double deltaTime) {
 	const double rate = 1.0 / deltaTime;
 	const double deltaFrame = 60 / rate;
-	
-	rx += dx * deltaFrame;
-	ry += dy * deltaFrame;
 
-	fixGridPosition();
-	syncShape();
+	updatePosition(deltaFrame);
 }
 
 bool Entity::im() {
@@ -111,8 +153,11 @@ bool Entity::im() {
 
 	sf::Vector2f velocity = {dx, dy};
 	bool velocityChanged = false;
-	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -0.5, 0.5);
+	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -1, 1);
 	if(velocityChanged) setGridVelocity(velocity.x, velocity.y);
+
+	ImGui::Value("Collision", Game::getInstance()->hasCollision(cx + rx, cy + ry));
+	ImGui::Value("Jumping", jumping);
 
 	return pixelChanged || gridChanged || velocityChanged;
 }

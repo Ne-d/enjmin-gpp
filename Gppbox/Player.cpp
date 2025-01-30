@@ -8,10 +8,10 @@ Player::Player(const float x, const float y, sf::RectangleShape entityShape)
 }
 
 void Player::update(const double deltaTime) {
-	Entity::update(deltaTime);
-
 	pollInput();
 	move(deltaTime);
+
+	//Entity::update(deltaTime);
 }
 
 void Player::pollInput() {
@@ -22,6 +22,11 @@ void Player::pollInput() {
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		moveInput += 1;
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		jumping = true;
+		dy = -2;
+	}
 }
 
 void Player::move(const double deltaTime) {
@@ -30,22 +35,15 @@ void Player::move(const double deltaTime) {
 
 	// Only apply movement if target speed is faster than current speed
 	// Otherwise apply friction
-	if (abs(moveInput * moveSpeed) > abs(dx))
+	const float targetSpeed = moveInput * moveSpeed;
+	if (abs(targetSpeed) > abs(dx))
 		dx = moveInput * moveSpeed;
 	else {
 		dx *= pow(frx, deltaFrame);
 		dy *= pow(fry, deltaFrame);
 	}
 
-	// Collisions
-	if (hasCollision(cx + 1, cy) && rx > 0.5) {
-		rx = 0.5;
-		dx = 0;
-	}
-	if (hasCollision(cx - 1, cy) && rx < 0.5) {
-		rx = 0.5;
-		dx = 0;
-	}
+	updatePosition(deltaFrame);
 
-	fixGridPosition();
+	syncShape();
 }
