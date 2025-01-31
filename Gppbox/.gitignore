@@ -1,2 +1,5 @@
 ﻿# Remove Satan's Spawn
 .idea/
+
+# Build and debug data
+sfml_test/
