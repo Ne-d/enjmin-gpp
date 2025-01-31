@@ -54,7 +54,7 @@ void Entity::syncShape() {
 }
 
 void Entity::updatePosition(const double deltaFrame) {
-	Game* game = Game::getInstance();
+	Game* game = Game::instance;
 
 	// Integrate position based on velocity
 	rx += dx * deltaFrame;

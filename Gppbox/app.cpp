@@ -67,7 +67,7 @@ int main()
 
 	ImGui::SFML::Init(window);
 
-    Game g(&window);
+	auto g = new Game(&window);
 
 	Vector2i winPos;
 
@@ -112,7 +112,7 @@ int main()
 		while (window.pollEvent(event))//sort un evenement de la liste pour le traiter
 		{
 			ImGui::SFML::ProcessEvent(event);
-			g.processInput(event);
+			g->processInput(event);
 
 			if (event.type == sf::Event::Resized) {
 				auto nsz = window.getSize();
@@ -133,7 +133,7 @@ int main()
     	ImGui::SFML::Update(window, sf::seconds((float)dt));
     	ImGui::SetWindowFontScale(1.75);
 
-        g.update(dt);
+		g->update(dt);
 		
 		if (ImGui::CollapsingHeader("View")) {
 			auto sz = v.getSize();
@@ -162,9 +162,9 @@ int main()
 			ImGui::SliderFloat("bloomWidth", &bloomWidth, 0, 55);//55 is max acceptable kernel size for constants, otherwise we should use a texture
 			ImGui::ColorEdit4("bloomMul", &bloomMul.x);
 		}
-		g.im();
+		g->im();
 
-        g.draw(window);
+		g->draw(window);
 
 		window.draw(fpsCounter);
 

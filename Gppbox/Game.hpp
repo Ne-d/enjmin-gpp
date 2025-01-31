@@ -15,8 +15,10 @@ class Entity;
 
 class HotReloadShader;
 class Game {
+
 public:
-	static Game* getInstance();
+	explicit Game(sf::RenderWindow* win);
+	static Game* instance;
 	
 	sf::RenderWindow*				win = nullptr;
 
@@ -33,9 +35,7 @@ public:
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
-
-	Game(sf::RenderWindow * win);
-
+	
 	void cacheWalls();
 	bool hasCollision(int gridX, int gridY);
 
@@ -50,7 +50,4 @@ public:
 
 	bool isWall(int cx, int cy);
 	void im();
-
-private:
-	static Game* instance;
 };

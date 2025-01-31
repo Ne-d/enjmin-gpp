@@ -15,12 +15,10 @@ static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
 
 Game* Game::instance = nullptr;
 
-Game* Game::getInstance() {
-	return instance;
-}
 
-Game::Game(sf::RenderWindow * win) {
+Game::Game(sf::RenderWindow* win) {
 	this->win = win;
+	instance = this;
 	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
 	bool isOk = tex.loadFromFile("res/bg_stars.png");
@@ -78,8 +76,8 @@ bool Game::hasCollision(const int gridX, const int gridY) {
 	if (gridY > screenBoundBottom)
 		return true;
 
-	//if (isWall(gridX, gridY))
-	//	return true;
+	if (isWall(gridX, gridY))
+		return true;
 
 	return false;
 }
@@ -149,7 +147,8 @@ void Game::update(double dt) {
 	beforeParts.update(dt);
 	afterParts.update(dt);
 
-	for(auto entity : entities) entity->update(dt);
+	for (auto* entity : entities)
+		entity->update(dt);
 }
 
  void Game::draw(sf::RenderWindow & win) {
@@ -182,10 +181,14 @@ void Game::onSpacePressed() {
 	
 }
 
+//@formatter:off
+//Come back here you moron, for some reason, "this" is NULL.
+//@formatter:on
 
-bool Game::isWall(int cx, int cy)
+bool Game::isWall(const int cx, const int cy)
 {
-	for (Vector2i& w : walls) {
+	for (unsigned int i = 0; i < walls.size(); ++i) {
+		const Vector2i w = walls[i];
 		if (w.x == cx && w.y == cy)
 			return true;
 	}

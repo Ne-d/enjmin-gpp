@@ -139,7 +139,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;sfml-main-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;sfml-graphics-s-d.lib;sfml-audio-s-d.lib;openal32.lib;ogg.lib;freetype.lib;flac.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-        <AdditionalOptions>/ZI</AdditionalOptions>
+        <AdditionalOptions></AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
