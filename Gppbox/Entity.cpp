@@ -40,8 +40,8 @@ void Entity::setGridVelocity(const float x, const float y) {
 
 sf::Vector2i Entity::getPixelPosition() const {
 	return sf::Vector2i(
-		(cx + rx) * C::GRID_SIZE,
-		(cy + ry) * C::GRID_SIZE
+		(int)(cx + rx) * C::GRID_SIZE,
+		(int)(cy + ry) * C::GRID_SIZE
 	);
 }
 
@@ -54,12 +54,12 @@ void Entity::syncShape() {
 }
 
 void Entity::updatePosition(const double deltaFrame) {
+	Game* game = Game::getInstance();
+
 	// Integrate position based on velocity
 	rx += dx * deltaFrame;
 	ry += dy * deltaFrame;
-
-	Game* game = Game::getInstance();
-
+	
 	// Collisions
 	constexpr float collisionThresholdX = 0.5f;
 
@@ -89,37 +89,43 @@ void Entity::updatePosition(const double deltaFrame) {
 	}
 	while (rx > 1.0f);
 
-	if (jumping) {
-		// Gravity
-		dy += gravity * deltaFrame;
 
-		// Y(-) Movement collisions
-		do {
-			if (game->hasCollision(cx, cy - 2) && ry <= 1.0f) {
-				ry = 1.0f;
-				dy = 0.0f;
-			}
-			if (ry < 0.0f) {
-				cy--;
-				ry++;
-			}
-		}
-		while (ry < 0.0f);
+	// Gravity
+	dy += gravity * deltaFrame;
 
-		// Y(+) Movement collisions
-		do {
-			if (game->hasCollision(cx, cy + 1) && ry >= 0.99f) {
-				ry = 0.99f;
-				dy = 0.0f;
-				jumping = false;
-			}
-			if (ry > 1.0f) {
-				cy++;
-				ry--;
-			}
+	// Y(-) Movement collisions
+	do {
+		if (game->hasCollision(cx, cy - 3) && ry < 0.0f) {
+			ry = 0.0f;
+			dy = 0.0f;
 		}
-		while (ry > 1.0f);
+
+		isOnGround = false;
+
+		if (ry < 0.0f) {
+			cy--;
+			ry++;
+		}
 	}
+	while (ry < 0.0f);
+
+
+	// Y(+) Movement collisions
+	do {
+		if (game->hasCollision(cx, cy + 1) && ry >= 0.99f) {
+			ry = 0.99f;
+			dy = 0.0f;
+			isOnGround = true;
+		}
+		else
+			isOnGround = false;
+
+		if (ry > 1.0f) {
+			cy++;
+			ry--;
+		}
+	}
+	while (ry > 1.0f);
 
 	syncShape();
 }
@@ -156,8 +162,7 @@ bool Entity::im() {
 	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -1, 1);
 	if(velocityChanged) setGridVelocity(velocity.x, velocity.y);
 
-	ImGui::Value("Collision", Game::getInstance()->hasCollision(cx + rx, cy + ry));
-	ImGui::Value("Jumping", jumping);
+	ImGui::Value("Is on Ground", isOnGround);
 
 	return pixelChanged || gridChanged || velocityChanged;
 }

@@ -35,9 +35,9 @@ public:
 	float dy = 0;
 	float frx = 0.91f;
 	float fry = 0.91f;
-	float gravity = 1.0f;
+	float gravity = 0.1f;
 
-	bool jumping = false;
+	bool isOnGround = false;
 	
 	// Graphics
 	sf::RectangleShape shape;

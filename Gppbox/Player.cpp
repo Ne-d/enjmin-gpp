@@ -24,7 +24,6 @@ void Player::pollInput() {
 		moveInput += 1;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		jumping = true;
 		dy = -2;
 	}
 }
