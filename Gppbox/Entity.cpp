@@ -65,7 +65,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// X(-) Movement collisions
 	do {
-		if (game->hasCollision(cx - 1, cy) && rx <= collisionThresholdX) {
+		if (game->hasCollision(cx - 1, cy, collisionWidth, collisionHeight) && rx <= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
 		}
@@ -78,7 +78,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// X(+) Movement collisions
 	do {
-		if (game->hasCollision(cx + 1, cy) && rx >= collisionThresholdX) {
+		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight) && rx >= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
 		}
@@ -91,7 +91,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// Y(-) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy - 3) && ry < 0.0f) {
+		if (game->hasCollision(cx, cy - 3, collisionWidth, collisionHeight) && ry < 0.0f) {
 			ry = 0.0f;
 			dy = 0.0f;
 		}
@@ -108,7 +108,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// Y(+) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy + 1) && ry >= 0.99f) {
+		if (game->hasCollision(cx, cy + 1, collisionWidth, collisionHeight) && ry >= 0.99f) {
 			ry = 0.99f;
 			dy = 0.0f;
 			isOnGround = true;

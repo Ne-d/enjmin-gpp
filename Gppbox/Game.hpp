@@ -41,6 +41,7 @@ public:
 	
 	void cacheWalls();
 	bool hasCollision(int gridX, int gridY);
+	bool hasCollision(int gridX, int gridY, int width, int height);
 
 	void processInput(sf::Event ev);
 	bool wasPressed = false;

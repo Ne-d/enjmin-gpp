@@ -82,6 +82,15 @@ bool Game::hasCollision(const int gridX, const int gridY) {
 	return false;
 }
 
+bool Game::hasCollision(const int gridX, const int gridY, const int width, const int height) {
+	for (int x = 0; x < width; ++x)
+		for (int y = 0; y < height; ++y)
+			if (hasCollision(gridX + x, gridY - y))
+				return true;
+
+	return false;
+}
+
 void Game::processInput(sf::Event ev) {
 	if (ev.type == sf::Event::Closed) {
 		win->close();

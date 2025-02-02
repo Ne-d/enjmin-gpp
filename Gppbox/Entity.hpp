@@ -20,19 +20,22 @@ private:
 	void updatePosition(double deltaFrame);
 
 public:
-	// Data
+	// Methods
 	virtual void update();
-
+	
 	// Base coordinates
 	int cx = 0;
 	int cy = 0;
 	float rx = 0.5f;
 	float ry = 0.5f;
-
+	
 	// Movement
 	float dx = 0;
 	float dy = 0;
 
+	int collisionWidth = 1;
+	int collisionHeight = 2;
+	
 	bool isOnGround = false;
 	
 	// Graphics
