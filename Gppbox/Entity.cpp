@@ -89,10 +89,6 @@ void Entity::updatePosition(const double deltaFrame) {
 	}
 	while (rx > 1.0f);
 
-
-	// Gravity
-	dy += gravity * deltaFrame;
-
 	// Y(-) Movement collisions
 	do {
 		if (game->hasCollision(cx, cy - 3) && ry < 0.0f) {
@@ -130,11 +126,8 @@ void Entity::updatePosition(const double deltaFrame) {
 	syncShape();
 }
 
-void Entity::update(const double deltaTime) {
-	const double rate = 1.0 / deltaTime;
-	const double deltaFrame = 60 / rate;
-
-	updatePosition(deltaFrame);
+void Entity::update() {
+	updatePosition(Game::instance->deltaFrame);
 }
 
 bool Entity::im() {

@@ -138,7 +138,12 @@ int blendModeIndex(sf::BlendMode bm) {
 	return 4;
 };
 
-void Game::update(double dt) {
+void Game::update(const double dt) {
+	// Set global delta time values
+	deltaTime = dt;
+	const double rate = 1.0 / deltaTime;
+	deltaFrame = 60 / rate;
+	
 	pollInput(dt);
 
 	g_time += dt;
@@ -148,7 +153,7 @@ void Game::update(double dt) {
 	afterParts.update(dt);
 
 	for (auto* entity : entities)
-		entity->update(dt);
+		entity->update();
 }
 
  void Game::draw(sf::RenderWindow & win) {

@@ -1,17 +1,14 @@
 ﻿#include "Player.hpp"
 
-#include <utility>
-
-Player::Player(const float x, const float y, sf::RectangleShape entityShape)
+Player::Player(const float x, const float y, const sf::RectangleShape& entityShape)
 	:
-	Entity(x, y, std::move(entityShape)) {
+	Character(x, y, entityShape) {
 }
 
-void Player::update(const double deltaTime) {
+void Player::update() {
 	pollInput();
-	move(deltaTime);
 
-	//Entity::update(deltaTime);
+	Character::update();
 }
 
 void Player::pollInput() {
@@ -23,26 +20,7 @@ void Player::pollInput() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		moveInput += 1;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-		dy = -2;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround) {
+		dy = -jumpImpulse;
 	}
-}
-
-void Player::move(const double deltaTime) {
-	const double rate = 1.0 / deltaTime;
-	const double deltaFrame = 60 / rate;
-
-	// Only apply movement if target speed is faster than current speed
-	// Otherwise apply friction
-	const float targetSpeed = moveInput * moveSpeed;
-	if (abs(targetSpeed) > abs(dx))
-		dx = moveInput * moveSpeed;
-	else {
-		dx *= pow(frx, deltaFrame);
-		dy *= pow(fry, deltaFrame);
-	}
-
-	updatePosition(deltaFrame);
-
-	syncShape();
 }

@@ -7,7 +7,6 @@ class Entity
 public:
 	// Methods
 	explicit Entity(float x, float y, sf::RectangleShape shape);
-	virtual ~Entity() = default;
 
 	void setPixelPosition(int x, int y);
 	
@@ -16,13 +15,13 @@ public:
 
 	sf::Vector2i getPixelPosition() const;
 
-protected:
+private:
 	void syncShape();
 	void updatePosition(double deltaFrame);
 
 public:
 	// Data
-	virtual void update(double deltaTime);
+	virtual void update();
 
 	// Base coordinates
 	int cx = 0;
@@ -33,9 +32,6 @@ public:
 	// Movement
 	float dx = 0;
 	float dy = 0;
-	float frx = 0.91f;
-	float fry = 0.91f;
-	float gravity = 0.1f;
 
 	bool isOnGround = false;
 	

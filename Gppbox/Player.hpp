@@ -1,23 +1,15 @@
 ﻿#pragma once
 
+#include "Character.hpp"
 #include "Entity.hpp"
 
-class Player : public Entity {
+class Player : public Character {
 public:
-	explicit Player(float x, float y, sf::RectangleShape entityShape);
-	~Player() override = default;
+	explicit Player(float x, float y, const sf::RectangleShape& entityShape);
 
-	void update(double deltaTime) override;
+	void update() override;
 
 private:
 	// Methods
 	void pollInput();
-	void move(double deltaTime);
-
-	// Input data
-	float moveInput;
-	bool jumpInput;
-
-	// Gameplay data
-	float moveSpeed = 1.0f;
 };

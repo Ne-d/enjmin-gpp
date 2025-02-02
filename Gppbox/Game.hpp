@@ -19,6 +19,9 @@ class Game {
 public:
 	explicit Game(sf::RenderWindow* win);
 	static Game* instance;
+
+	double deltaTime;
+	double deltaFrame;
 	
 	sf::RenderWindow*				win = nullptr;
 
