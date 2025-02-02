@@ -13,12 +13,14 @@ protected:
 	// Input Data
 	float moveInput;
 
-	// Gameplay Data
-	float moveSpeed = 0.5f;
-	float jumpImpulse = 2.0f;
+	// Movement Data
+	float moveSpeed = 0.3f;
+	float jumpImpulse = 1.5f;
 
-	float frictionX = 0.91f;
+	float accelerationFactor = 0.15f;
+
+	float frictionX = 0.80f;
 	float frictionY = 0.91f;
 
-	float gravity = 0.1f;
+	float gravity = 0.09f;
 };

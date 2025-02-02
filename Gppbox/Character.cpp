@@ -12,13 +12,13 @@ void Character::update() {
 	// Otherwise apply friction
 	const float targetSpeed = moveInput * moveSpeed;
 	if (abs(targetSpeed) > abs(dx))
-		dx = moveInput * moveSpeed;
+		dx += moveInput * accelerationFactor * moveSpeed;
 	else {
 		dx *= pow(frictionX, Game::instance->deltaFrame);
-		dy *= pow(frictionY, Game::instance->deltaFrame);
 	}
-
+	
 	dy += gravity * Game::instance->deltaFrame;
+	dy *= pow(frictionY, Game::instance->deltaFrame);
 
 	Entity::update();
 }
