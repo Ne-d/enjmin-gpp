@@ -22,6 +22,7 @@ private:
 public:
 	// Methods
 	virtual void update();
+	virtual bool im();
 	
 	// Base coordinates
 	int cx = 0;
@@ -40,5 +41,4 @@ public:
 	
 	// Graphics
 	sf::RectangleShape shape;
-	bool im();
 };

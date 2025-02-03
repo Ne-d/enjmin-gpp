@@ -105,7 +105,6 @@ void Entity::updatePosition(const double deltaFrame) {
 	}
 	while (ry < 0.0f);
 
-
 	// Y(+) Movement collisions
 	do {
 		if (game->hasCollision(cx, cy + 1, collisionWidth, collisionHeight) && ry >= 0.99f) {
@@ -131,31 +130,39 @@ void Entity::update() {
 }
 
 bool Entity::im() {
-	ImGui::Value("cx", cx);
-	ImGui::Value("cy", cy);
-	
-	ImGui::Value("rx", rx);
-	ImGui::Value("ry", ry);
-	
-	ImGui::Value("dx", dx);
-	ImGui::Value("dy", dy);
+	if (ImGui::CollapsingHeader("Entity", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::Value("cx", cx);
+		ImGui::SameLine();
+		ImGui::Value("| cy", cy);
 
-	sf::Vector2i pixelPosition = getPixelPosition();
-	bool pixelChanged = false;
-	pixelChanged |= ImGui::DragInt2("Pixel Position", &pixelPosition.x, 1.0f, -9999, 9999);
-	if(pixelChanged) setPixelPosition(pixelPosition.x, pixelPosition.y);
+		ImGui::Value("rx", rx);
+		ImGui::SameLine();
+		ImGui::Value("| ry", ry);
 
-	sf::Vector2f gridPosition = {cx + rx, cy + ry};
-	bool gridChanged = false;
-	gridChanged |= ImGui::DragFloat2("Grid Position", &gridPosition.x, 0.1f, -9999, 9999);
-	if(gridChanged) setGridPosition(gridPosition.x, gridPosition.y);
+		ImGui::Value("dx", dx);
+		ImGui::SameLine();
+		ImGui::Value("| dy", dy);
 
-	sf::Vector2f velocity = {dx, dy};
-	bool velocityChanged = false;
-	velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -1, 1);
-	if(velocityChanged) setGridVelocity(velocity.x, velocity.y);
+		sf::Vector2i pixelPosition = getPixelPosition();
+		bool pixelChanged = false;
+		pixelChanged |= ImGui::DragInt2("Pixel Position", &pixelPosition.x, 1.0f, -9999, 9999);
+		if (pixelChanged)
+			setPixelPosition(pixelPosition.x, pixelPosition.y);
 
-	ImGui::Value("Is on Ground", isOnGround);
+		sf::Vector2f gridPosition = { cx + rx, cy + ry };
+		bool gridChanged = false;
+		gridChanged |= ImGui::DragFloat2("Grid Position", &gridPosition.x, 0.1f, -9999, 9999);
+		if (gridChanged)
+			setGridPosition(gridPosition.x, gridPosition.y);
 
-	return pixelChanged || gridChanged || velocityChanged;
+		sf::Vector2f velocity = { dx, dy };
+		bool velocityChanged = false;
+		velocityChanged |= ImGui::DragFloat2("Velocity", &velocity.x, 0.1f, -1, 1);
+		if (velocityChanged)
+			setGridVelocity(velocity.x, velocity.y);
+
+		return pixelChanged || gridChanged || velocityChanged;
+	}
+
+	return false;
 }

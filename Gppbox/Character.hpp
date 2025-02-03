@@ -9,6 +9,7 @@ public:
 protected:
 	// Methods
 	void update() override;
+	virtual bool im() override;
 
 	// Input Data
 	float moveInput;
