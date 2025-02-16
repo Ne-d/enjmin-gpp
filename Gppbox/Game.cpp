@@ -52,7 +52,7 @@ Game::Game(sf::RenderWindow* win) {
 	walls.push_back(Vector2i(10, 10));
 	cacheWalls();
 
-	entities.emplace_back(new Player(69, 42, sf::RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
+	entities.emplace_back(new Player(30, 60, sf::RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
 }
 
 void Game::cacheWalls()

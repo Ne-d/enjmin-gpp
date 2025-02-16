@@ -48,7 +48,7 @@ sf::Vector2i Entity::getPixelPosition() const {
 
 void Entity::syncShape() {
 	shape.setPosition(
-		(cx + rx - 0.5) * C::GRID_SIZE,
+		(cx + rx) * C::GRID_SIZE,
 		(cy + ry - 2) * C::GRID_SIZE
 	);
 }
@@ -61,11 +61,11 @@ void Entity::updatePosition(const double deltaFrame) {
 	ry += dy * deltaFrame;
 	
 	// Collisions
-	constexpr float collisionThresholdX = 0.5f;
+	constexpr float collisionThresholdX = 0.0f;
 
 	// X(-) Movement collisions
 	do {
-		if (game->hasCollision(cx - 1, cy, collisionWidth, collisionHeight) && rx <= collisionThresholdX) {
+		if (game->hasCollision(cx - 1, cy, collisionWidth, collisionHeight + 1) && rx <= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
 		}
@@ -78,7 +78,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// X(+) Movement collisions
 	do {
-		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight) && rx >= collisionThresholdX) {
+		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight + 1) && rx >= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
 		}
@@ -91,7 +91,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// Y(-) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy - 2, collisionWidth, collisionHeight) && ry < 0.0f) {
+		if (game->hasCollision(cx, cy - 2, collisionWidth + 1, collisionHeight) && ry < 0.0f) {
 			ry = 0.0f;
 			dy = 0.0f;
 		}
@@ -107,7 +107,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// Y(+) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy + 1, collisionWidth, collisionHeight) && ry >= 0.99f) {
+		if (game->hasCollision(cx, cy + 1, collisionWidth + 1, collisionHeight) && ry >= 0.99f) {
 			ry = 0.99f;
 			dy = 0.0f;
 			isOnGround = true;

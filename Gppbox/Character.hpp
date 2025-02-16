@@ -23,5 +23,5 @@ protected:
 	float frictionX = 0.80f;
 	float frictionY = 0.91f;
 
-	float gravity = 0.0f /*0.09f*/;
+	float gravity = 0.075f;
 };
