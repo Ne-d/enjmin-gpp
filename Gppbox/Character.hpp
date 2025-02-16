@@ -9,7 +9,7 @@ public:
 protected:
 	// Methods
 	void update() override;
-	virtual bool im() override;
+	bool im() override;
 
 	// Input Data
 	float moveInput;
@@ -23,5 +23,5 @@ protected:
 	float frictionX = 0.80f;
 	float frictionY = 0.91f;
 
-	float gravity = 0.09f;
+	float gravity = 0.0f /*0.09f*/;
 };

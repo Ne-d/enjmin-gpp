@@ -5,6 +5,8 @@
 #include "C.hpp"
 #include "Game.hpp"
 
+#include <iostream>
+
 #include "Entity.hpp"
 #include "HotReloadShader.hpp"
 #include "Player.hpp"
@@ -45,6 +47,9 @@ Game::Game(sf::RenderWindow* win) {
 	walls.push_back(Vector2i(cols >> 2, lastLine - 3));
 	walls.push_back(Vector2i(cols >> 2, lastLine - 4));
 	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
+	walls.push_back(Vector2i((cols >> 2) - 1, lastLine - 4));
+
+	walls.push_back(Vector2i(10, 10));
 	cacheWalls();
 
 	entities.emplace_back(new Player(69, 42, sf::RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
@@ -83,12 +88,13 @@ bool Game::hasCollision(const int gridX, const int gridY) {
 }
 
 bool Game::hasCollision(const int gridX, const int gridY, const int width, const int height) {
+	bool collisionSoFar = false;
+	
 	for (int x = 0; x < width; ++x)
 		for (int y = 0; y < height; ++y)
-			if (hasCollision(gridX + x, gridY - y))
-				return true;
+			collisionSoFar |= hasCollision(gridX + x, gridY - y);
 
-	return false;
+	return collisionSoFar;
 }
 
 void Game::processInput(sf::Event ev) {
@@ -133,6 +139,10 @@ void Game::pollInput(double dt) {
 	else {
 		wasPressed = false;
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+		win->close();
+		closing = true;
+	}
 }
 
 static sf::VertexArray va;
@@ -145,7 +155,7 @@ int blendModeIndex(sf::BlendMode bm) {
 	if (bm == sf::BlendNone) return 2;
 	if (bm == sf::BlendMultiply) return 3;
 	return 4;
-};
+}
 
 void Game::update(const double dt) {
 	// Set global delta time values
@@ -194,10 +204,6 @@ void Game::update(const double dt) {
 void Game::onSpacePressed() {
 	
 }
-
-//@formatter:off
-//Come back here you moron, for some reason, "this" is NULL.
-//@formatter:on
 
 bool Game::isWall(const int cx, const int cy)
 {

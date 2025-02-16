@@ -35,7 +35,7 @@ public:
 	float dy = 0;
 
 	int collisionWidth = 1;
-	int collisionHeight = 2;
+	int collisionHeight = 2 + 1; // Somehow, this needs to be 1 higher than the actual size.
 	
 	bool isOnGround = false;
 	

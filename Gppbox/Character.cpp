@@ -1,5 +1,7 @@
 ﻿#include "Character.hpp"
 
+#include <iostream>
+
 #include "Game.hpp"
 #include "imgui.h"
 

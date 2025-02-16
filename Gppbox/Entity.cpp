@@ -91,7 +91,7 @@ void Entity::updatePosition(const double deltaFrame) {
 
 	// Y(-) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy - 3, collisionWidth, collisionHeight) && ry < 0.0f) {
+		if (game->hasCollision(cx, cy - 2, collisionWidth, collisionHeight) && ry < 0.0f) {
 			ry = 0.0f;
 			dy = 0.0f;
 		}
