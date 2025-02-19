@@ -103,9 +103,25 @@ void Game::processInput(sf::Event ev) {
 		closing = true;
 		return;
 	}
-	if (ev.type == sf::Event::KeyReleased) {
-		
-	
+
+	if (ev.type == Event::MouseButtonPressed) {
+		auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
+
+		int wallIndex = -1;
+		for (unsigned int i = 0; i < walls.size(); ++i)
+			if (walls.at(i) == mousePos)
+				wallIndex = i;
+
+		if (ev.mouseButton.button == Mouse::Left)
+			if (wallIndex == -1)
+				walls.emplace_back(mousePos.x, mousePos.y);
+
+		if (ev.mouseButton.button == Mouse::Right) {
+			if (wallIndex != -1)
+				walls.erase(walls.begin() + wallIndex);
+		}
+
+		cacheWalls();
 	}
 }
 
