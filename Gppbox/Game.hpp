@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <vector>
 
 #include "SFML/Graphics.hpp"
@@ -43,6 +44,7 @@ public:
 	bool hasCollision(int gridX, int gridY);
 	bool hasCollision(int gridX, int gridY, int width, int height);
 
+	std::optional<size_t> getWallIndex(Vector2i pos) const;
 	void processInput(sf::Event ev);
 	bool wasPressed = false;
 	void pollInput(double dt);
@@ -52,6 +54,6 @@ public:
 
 	void draw(sf::RenderWindow& win);
 
-	bool isWall(int cx, int cy);
-	void im();
+	bool isWall(int cx, int cy) const;
+	void im() const;
 };

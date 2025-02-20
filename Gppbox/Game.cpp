@@ -6,6 +6,7 @@
 #include "Game.hpp"
 
 #include <iostream>
+#include <optional>
 
 #include "Entity.hpp"
 #include "HotReloadShader.hpp"
@@ -18,50 +19,51 @@ static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
 Game* Game::instance = nullptr;
 
 
-Game::Game(sf::RenderWindow* win) {
-	this->win = win;
+Game::Game(RenderWindow* win)
+	:
+	win(win) {
 	instance = this;
-	bg = sf::RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
+	bg = RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
-	bool isOk = tex.loadFromFile("res/bg_stars.png");
+	bool const isOk = tex.loadFromFile("res/bg_stars.png");
 	if (!isOk) {
 		printf("ERR : LOAD FAILED\n");
 	}
 	bg.setTexture(&tex);
-	bg.setSize(sf::Vector2f(C::RESOLUTION_X, C::RESOLUTION_Y));
+	bg.setSize(Vector2f(C::RESOLUTION_X, C::RESOLUTION_Y));
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 
 	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i)
-		walls.push_back(Vector2i(i, lastLine));
+		walls.emplace_back(i, lastLine);
 
-	walls.push_back(Vector2i(0, lastLine - 1));
-	walls.push_back(Vector2i(0, lastLine - 2));
-	walls.push_back(Vector2i(0, lastLine - 3));
+	walls.emplace_back(0, lastLine - 1);
+	walls.emplace_back(0, lastLine - 2);
+	walls.emplace_back(0, lastLine - 3);
 
-	walls.push_back(Vector2i(cols - 1, lastLine - 1));
-	walls.push_back(Vector2i(cols - 1, lastLine - 2));
-	walls.push_back(Vector2i(cols - 1, lastLine - 3));
+	walls.emplace_back(cols - 1, lastLine - 1);
+	walls.emplace_back(cols - 1, lastLine - 2);
+	walls.emplace_back(cols - 1, lastLine - 3);
 
-	walls.push_back(Vector2i(cols >> 2, lastLine - 2));
-	walls.push_back(Vector2i(cols >> 2, lastLine - 3));
-	walls.push_back(Vector2i(cols >> 2, lastLine - 4));
-	walls.push_back(Vector2i((cols >> 2) + 1, lastLine - 4));
-	walls.push_back(Vector2i((cols >> 2) - 1, lastLine - 4));
+	walls.emplace_back(cols >> 2, lastLine - 2);
+	walls.emplace_back(cols >> 2, lastLine - 3);
+	walls.emplace_back(cols >> 2, lastLine - 4);
+	walls.emplace_back((cols >> 2) + 1, lastLine - 4);
+	walls.emplace_back((cols >> 2) - 1, lastLine - 4);
 
-	walls.push_back(Vector2i(10, 10));
+	walls.emplace_back(10, 10);
 	cacheWalls();
 
-	entities.emplace_back(new Player(30, 60, sf::RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
+	entities.emplace_back(new Player(30, 60, RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
 }
 
 void Game::cacheWalls()
 {
 	wallSprites.clear();
-	for (Vector2i w : walls) {
-		sf::RectangleShape rect(Vector2f(16,16));
+	for (const Vector2i w : walls) {
+		RectangleShape rect(Vector2f(16, 16));
 		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
-		rect.setFillColor(sf::Color(0x07ff07ff));
+		rect.setFillColor(Color(0x07ff07ff));
 		wallSprites.push_back(rect);
 	}
 }
@@ -97,32 +99,56 @@ bool Game::hasCollision(const int gridX, const int gridY, const int width, const
 	return collisionSoFar;
 }
 
-void Game::processInput(sf::Event ev) {
-	if (ev.type == sf::Event::Closed) {
+optional<Vector2i> previousMousePos = std::nullopt;
+
+std::optional<size_t> Game::getWallIndex(const Vector2i pos) const {
+	int index = -1;
+
+	for (unsigned int i = 0; i < walls.size(); ++i)
+		if (walls.at(i) == pos)
+			index = i;
+
+	if (index != -1)
+		return std::make_optional(index);
+
+	return std::nullopt;
+}
+
+void Game::processInput(Event ev) {
+	if (ev.type == Event::Closed) {
 		win->close();
 		closing = true;
 		return;
 	}
 
-	if (ev.type == Event::MouseButtonPressed) {
-		auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
+	auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
+	std::optional<int> wallIndex = std::nullopt;
 
-		int wallIndex = -1;
-		for (unsigned int i = 0; i < walls.size(); ++i)
-			if (walls.at(i) == mousePos)
-				wallIndex = i;
+	if (Mouse::isButtonPressed(Mouse::Left)) {
+		wallIndex = getWallIndex(mousePos);
 
-		if (ev.mouseButton.button == Mouse::Left)
-			if (wallIndex == -1)
-				walls.emplace_back(mousePos.x, mousePos.y);
-
-		if (ev.mouseButton.button == Mouse::Right) {
-			if (wallIndex != -1)
-				walls.erase(walls.begin() + wallIndex);
+		// Only add a wall if we weren't clicking on the last frame or if we were on a different tile
+		// and there was no wall already there.
+		if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
+			walls.emplace_back(mousePos.x, mousePos.y);
+			cacheWalls();
 		}
 
-		cacheWalls();
+		previousMousePos.emplace(mousePos);
 	}
+
+	if (Mouse::isButtonPressed(Mouse::Right)) {
+		wallIndex = getWallIndex(mousePos);
+
+		if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
+			walls.erase(walls.begin() + wallIndex.value());
+			cacheWalls();
+		}
+
+		previousMousePos.emplace(mousePos);
+	}
+
+	previousMousePos = std::nullopt;
 }
 
 
@@ -130,23 +156,8 @@ static double g_time = 0.0;
 static double g_tickTimer = 0.0;
 
 
-void Game::pollInput(double dt) {
-	Entity* player = entities.front();
-	
-	float lateralSpeed = 8.0;
-	float maxSpeed = 40.0;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q)) {
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T)) {
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
+void Game::pollInput(const double dt) {
+	if (Keyboard::isKeyPressed(Keyboard::Key::Space)) {
 		if (!wasPressed) {
 			onSpacePressed();
 			wasPressed = true;
@@ -155,21 +166,23 @@ void Game::pollInput(double dt) {
 	else {
 		wasPressed = false;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+	if (Keyboard::isKeyPressed(Keyboard::Key::Escape)) {
 		win->close();
 		closing = true;
 	}
 }
 
-static sf::VertexArray va;
-static RenderStates vaRs;
-static std::vector<sf::RectangleShape> rects;
+static std::vector<RectangleShape> rects;
 
-int blendModeIndex(sf::BlendMode bm) {
-	if (bm == sf::BlendAlpha) return 0;
-	if (bm == sf::BlendAdd) return 1;
-	if (bm == sf::BlendNone) return 2;
-	if (bm == sf::BlendMultiply) return 3;
+int blendModeIndex(BlendMode bm) {
+	if (bm == BlendAlpha)
+		return 0;
+	if (bm == BlendAdd)
+		return 1;
+	if (bm == BlendNone)
+		return 2;
+	if (bm == BlendMultiply)
+		return 3;
 	return 4;
 }
 
@@ -182,7 +195,8 @@ void Game::update(const double dt) {
 	pollInput(dt);
 
 	g_time += dt;
-	if (bgShader) bgShader->update(dt);
+	if (bgShader != nullptr)
+		bgShader->update(dt);
 
 	beforeParts.update(dt);
 	afterParts.update(dt);
@@ -191,12 +205,12 @@ void Game::update(const double dt) {
 		entity->update();
 }
 
- void Game::draw(sf::RenderWindow & win) {
+void Game::draw(RenderWindow& win) {
 	if (closing) return;
 
-	sf::RenderStates states = sf::RenderStates::Default;
-	sf::Shader * sh = &bgShader->sh;
-	states.blendMode = sf::BlendAdd;
+	RenderStates states = RenderStates::Default;
+	Shader* sh = &bgShader->sh;
+	states.blendMode = BlendAdd;
 	states.shader = sh;
 	states.texture = &tex;
 	sh->setUniform("texture", tex);
@@ -205,13 +219,13 @@ void Game::update(const double dt) {
 
 	beforeParts.draw(win);
 
-	for (sf::RectangleShape  const& r : wallSprites)
+	for (RectangleShape const& r : wallSprites)
 		win.draw(r);
 
-	for (sf::RectangleShape const& r : rects) 
+	for (RectangleShape const& r : rects) 
 		win.draw(r);
-	
-	for(const auto entity : entities)
+
+	for (const auto* const entity : entities)
 		win.draw(entity->shape);
 	
 	afterParts.draw(win);
@@ -221,19 +235,16 @@ void Game::onSpacePressed() {
 	
 }
 
-bool Game::isWall(const int cx, const int cy)
-{
-	for (unsigned int i = 0; i < walls.size(); ++i) {
-		const Vector2i w = walls[i];
+bool Game::isWall(const int cx, const int cy) const {
+	for (const auto w : walls) {
 		if (w.x == cx && w.y == cy)
 			return true;
 	}
 	return false;
 }
 
-void Game::im()
-{
-	for(const auto entity : entities)
+void Game::im() const {
+	for (auto* const entity : entities)
 		entity->im();
 }
 
