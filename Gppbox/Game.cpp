@@ -60,12 +60,16 @@ Game::Game(RenderWindow* win)
 void Game::cacheWalls()
 {
 	wallSprites.clear();
-	for (const Vector2i w : walls) {
-		RectangleShape rect(Vector2f(16, 16));
-		rect.setPosition((float)w.x * C::GRID_SIZE, (float)w.y * C::GRID_SIZE);
-		rect.setFillColor(Color(0x07ff07ff));
-		wallSprites.push_back(rect);
-	}
+
+	for (const Vector2i w : walls)
+		cacheWall(w);
+}
+
+void Game::cacheWall(const Vector2i wall) {
+	RectangleShape rect(Vector2f(16, 16));
+	rect.setPosition((float)wall.x * C::GRID_SIZE, (float)wall.y * C::GRID_SIZE);
+	rect.setFillColor(Color(0x07ff07ff));
+	wallSprites.push_back(rect);
 }
 
 bool Game::hasCollision(const int gridX, const int gridY) {
@@ -131,7 +135,7 @@ void Game::processInput(Event ev) {
 		// and there was no wall already there.
 		if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
 			walls.emplace_back(mousePos.x, mousePos.y);
-			cacheWalls();
+			cacheWall(Vector2i(mousePos.x, mousePos.y));
 		}
 
 		previousMousePos.emplace(mousePos);
@@ -142,7 +146,7 @@ void Game::processInput(Event ev) {
 
 		if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
 			walls.erase(walls.begin() + wallIndex.value());
-			cacheWalls();
+			wallSprites.erase(wallSprites.begin() + wallIndex.value());
 		}
 
 		previousMousePos.emplace(mousePos);
