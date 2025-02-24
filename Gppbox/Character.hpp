@@ -4,7 +4,7 @@
 
 class Character : public Entity {
 public:
-	explicit Character(float x, float y, const sf::RectangleShape& entityShape);
+	explicit Character(float x, float y);
 
 protected:
 	// Methods

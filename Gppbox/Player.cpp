@@ -1,8 +1,8 @@
 ﻿#include "Player.hpp"
 
-Player::Player(const float x, const float y, const sf::RectangleShape& entityShape)
+Player::Player(const float x, const float y)
 	:
-	Character(x, y, entityShape) {
+	Character(x, y) {
 }
 
 void Player::update() {

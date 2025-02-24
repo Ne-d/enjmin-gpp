@@ -8,6 +8,7 @@
 #include <iostream>
 #include <optional>
 
+#include "Enemy.hpp"
 #include "Entity.hpp"
 #include "HotReloadShader.hpp"
 #include "Player.hpp"
@@ -54,7 +55,11 @@ Game::Game(RenderWindow* win)
 	walls.emplace_back(10, 10);
 	cacheWalls();
 
-	entities.emplace_back(new Player(30, 60, RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })));
+	// Let's assume the first entity in the array is always the Player.
+	// TODO: Make that cleaner
+	entities.emplace_back(new Player(30, 60));
+
+	entities.emplace_back(new Enemy(69, 42));
 }
 
 void Game::cacheWalls()
@@ -72,7 +77,7 @@ void Game::cacheWall(const Vector2i wall) {
 	wallSprites.push_back(rect);
 }
 
-bool Game::hasCollision(const int gridX, const int gridY) {
+bool Game::hasCollision(const int gridX, const int gridY) const {
 	if (gridX < 0)
 		return true;
 
@@ -93,7 +98,7 @@ bool Game::hasCollision(const int gridX, const int gridY) {
 	return false;
 }
 
-bool Game::hasCollision(const int gridX, const int gridY, const int width, const int height) {
+bool Game::hasCollision(const int gridX, const int gridY, const int width, const int height) const {
 	bool collisionSoFar = false;
 	
 	for (int x = 0; x < width; ++x)
@@ -248,7 +253,6 @@ bool Game::isWall(const int cx, const int cy) const {
 }
 
 void Game::im() const {
-	for (auto* const entity : entities)
-		entity->im();
+	entities.at(0)->im();
 }
 

@@ -42,8 +42,8 @@ public:
 	
 	void cacheWalls();
 	void cacheWall(Vector2i wall);
-	bool hasCollision(int gridX, int gridY);
-	bool hasCollision(int gridX, int gridY, int width, int height);
+	bool hasCollision(int gridX, int gridY) const;
+	bool hasCollision(int gridX, int gridY, int width, int height) const;
 
 	std::optional<size_t> getWallIndex(Vector2i pos) const;
 	void processInput(sf::Event ev);

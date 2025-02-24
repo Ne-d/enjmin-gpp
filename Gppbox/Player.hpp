@@ -5,7 +5,7 @@
 
 class Player : public Character {
 public:
-	explicit Player(float x, float y, const sf::RectangleShape& entityShape);
+	explicit Player(float x, float y);
 
 	void update() override;
 

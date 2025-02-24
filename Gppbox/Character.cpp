@@ -1,13 +1,13 @@
 ﻿#include "Character.hpp"
 
-#include <iostream>
-
+#include "C.hpp"
 #include "Game.hpp"
 #include "imgui.h"
 
-Character::Character(float x, float y, const sf::RectangleShape& entityShape)
+Character::Character(const float x, const float y)
 	:
-	Entity(x, y, entityShape) {
+	Entity(x, y, RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })),
+	moveInput(0) {
 }
 
 void Character::update() {

@@ -38,6 +38,8 @@ public:
 	int collisionHeight = 2;
 	
 	bool isOnGround = false;
+	bool isOnLeftWall = false;
+	bool isOnRightWall = false;
 	
 	// Graphics
 	sf::RectangleShape shape;

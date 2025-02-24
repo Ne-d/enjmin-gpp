@@ -63,11 +63,13 @@ void Entity::updatePosition(const double deltaFrame) {
 	// Collisions
 	constexpr float collisionThresholdX = 0.0f;
 
+	isOnLeftWall = false;
 	// X(-) Movement collisions
 	do {
 		if (game->hasCollision(cx - 1, cy, collisionWidth, collisionHeight + 1) && rx <= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
+			isOnLeftWall = true;
 		}
 		if (rx < 0.0f) {
 			cx--;
@@ -76,11 +78,13 @@ void Entity::updatePosition(const double deltaFrame) {
 	}
 	while (rx < 0.0f);
 
+	isOnRightWall = false;
 	// X(+) Movement collisions
 	do {
 		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight + 1) && rx >= collisionThresholdX) {
 			rx = collisionThresholdX;
 			dx = 0.0f;
+			isOnRightWall = true;
 		}
 		if (rx > 1.0f) {
 			cx++;
