@@ -95,19 +95,6 @@ bool Game::hasCollision(const int gridX, const int gridY, const int width, const
 
 optional<Vector2i> previousMousePos = std::nullopt;
 
-std::optional<size_t> Game::getWallIndex(const Vector2i pos) const {
-	int index = -1;
-
-	for (unsigned int i = 0; i < level.walls.size(); ++i)
-		if (level.walls.at(i) == pos)
-			index = i;
-
-	if (index != -1)
-		return std::make_optional(index);
-
-	return std::nullopt;
-}
-
 void Game::processInput(Event ev) {
 	if (ev.type == Event::Closed) {
 		win->close();
@@ -115,30 +102,28 @@ void Game::processInput(Event ev) {
 		return;
 	}
 
-	if (isEditingLevel) {
+	if (isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
 		auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
-		std::optional<int> wallIndex = std::nullopt;
 
 		if (Mouse::isButtonPressed(Mouse::Left)) {
-			wallIndex = getWallIndex(mousePos);
-
 			// Only add a wall if we weren't clicking on the last frame or if we were on a different tile
-			// and there was no wall already there.
-			if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
-				level.walls.emplace_back(mousePos.x, mousePos.y);
-				level.cacheWallShape(Vector2i(mousePos.x, mousePos.y));
+			if (!previousMousePos || previousMousePos.value() != mousePos) {
+				if ((TileType)selectedTileType == TileType::Empty)
+					level.removeTile(mousePos.x, mousePos.y);
+
+				if ((TileType)selectedTileType == TileType::Wall)
+					level.addWall(mousePos.x, mousePos.y);
+
+				if ((TileType)selectedTileType == TileType::Spawner)
+					level.addSpawner(mousePos.x, mousePos.y);
 			}
 
 			previousMousePos.emplace(mousePos);
 		}
 
 		if (Mouse::isButtonPressed(Mouse::Right)) {
-			wallIndex = getWallIndex(mousePos);
-
-			if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
-				level.walls.erase(level.walls.begin() + wallIndex.value());
-				level.wallShapes.erase(level.wallShapes.begin() + wallIndex.value());
-			}
+			if ((!previousMousePos || previousMousePos.value() != mousePos))
+				level.removeTile(mousePos.x, mousePos.y);
 
 			previousMousePos.emplace(mousePos);
 		}
@@ -158,8 +143,6 @@ void Game::pollInput(const double dt) {
 		closing = true;
 	}
 }
-
-static std::vector<RectangleShape> rects;
 
 int blendModeIndex(BlendMode bm) {
 	if (bm == BlendAlpha)
@@ -206,11 +189,7 @@ void Game::draw(RenderWindow& win) {
 
 	beforeParts.draw(win);
 
-	for (RectangleShape const& r : level.wallShapes)
-		win.draw(r);
-
-	for (RectangleShape const& r : rects) 
-		win.draw(r);
+	level.draw(isEditingLevel);
 
 	for (const auto* const entity : entities)
 		win.draw(entity->shape);
@@ -240,8 +219,8 @@ bool Game::im() {
 	changed |= Checkbox("Enabled", &isEditingLevel);
 
 	if (isEditingLevel) {
-		const char* tileList[] = { "Wall", "Spawner" };
-		changed |= ListBox("Tile Type", &selectedTileType, tileList, 2);
+		const char* tileList[] = { "Empty", "Wall", "Spawner" };
+		changed |= ListBox("Tile Type", &selectedTileType, tileList, 3);
 
 		if (Button("Save Level")) {
 			level.saveToFile("res/levels/test.txt");

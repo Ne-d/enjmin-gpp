@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <vector>
 
 #include "Level.hpp"
@@ -21,8 +20,7 @@ public:
 	explicit Game(sf::RenderWindow* win);
 	bool hasCollision(int gridX, int gridY) const;
 	bool hasCollision(int gridX, int gridY, int width, int height) const;
-
-	std::optional<size_t> getWallIndex(Vector2i pos) const;
+	
 	void processInput(sf::Event ev);
 
 	void pollInput(double dt);
@@ -54,7 +52,7 @@ public:
 	std::vector<Entity*> entities;
 
 	bool isEditingLevel = false;
-	int selectedTileType = 0;
+	int selectedTileType = 1;
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
