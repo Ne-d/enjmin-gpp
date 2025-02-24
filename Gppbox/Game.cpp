@@ -201,15 +201,17 @@ bool Game::im() {
 	changed |= Checkbox("Enabled", &isEditingLevel);
 
 	if (isEditingLevel) {
+		changed |= InputText("Level File", levelFilename, 1024);
+		
 		const char* tileList[] = { "Empty", "Wall", "Spawner" };
 		changed |= ListBox("Tile Type", &selectedTileType, tileList, 3);
 
 		if (Button("Save Level")) {
-			level.saveToFile("res/levels/test.txt");
+			level.saveToFile(std::string("res/levels/") + levelFilename + ".txt");
 		}
 
 		if (Button("Load Level")) {
-			level.loadFromFile("res/levels/test.txt");
+			level.loadFromFile(std::string("res/levels/") + levelFilename + ".txt");
 		}
 	}
 

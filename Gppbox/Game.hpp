@@ -52,7 +52,8 @@ public:
 	std::vector<Entity*> entities;
 
 	bool isEditingLevel = false;
-	int selectedTileType = 1;
+	int selectedTileType = (int)TileType::Wall; // Has to be an int (and not a TileType) to be compatible with ImGui.
+	char levelFilename[256] = "";
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
