@@ -1,6 +1,7 @@
 ﻿#include "Level.hpp"
 
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 #include "C.hpp"
@@ -12,7 +13,12 @@ Level::Level(const std::string& filename) {
 void Level::saveToFile(const std::string& filename) const {
 	std::ofstream fileStream(filename);
 
-	for (auto& w : walls) {
+	if (!fileStream.is_open()) {
+		std::cerr << "Level::saveToFile: Unable to open file " << filename << std::endl;
+		return;
+	}
+
+	for (const auto& w : walls) {
 		fileStream << w.x << " " << w.y << " 1\n";
 	}
 
@@ -48,6 +54,8 @@ void Level::loadFromFile(const std::string& filename) {
 			break;
 		}
 	}
+
+	cacheWallShapes();
 }
 
 void Level::cacheWallShape(const sf::Vector2i wall) {

@@ -115,34 +115,36 @@ void Game::processInput(Event ev) {
 		return;
 	}
 
-	auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
-	std::optional<int> wallIndex = std::nullopt;
+	if (isEditingLevel) {
+		auto mousePos = Mouse::getPosition(*win) / C::GRID_SIZE;
+		std::optional<int> wallIndex = std::nullopt;
 
-	if (Mouse::isButtonPressed(Mouse::Left)) {
-		wallIndex = getWallIndex(mousePos);
+		if (Mouse::isButtonPressed(Mouse::Left)) {
+			wallIndex = getWallIndex(mousePos);
 
-		// Only add a wall if we weren't clicking on the last frame or if we were on a different tile
-		// and there was no wall already there.
-		if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
-			level.walls.emplace_back(mousePos.x, mousePos.y);
-			level.cacheWallShape(Vector2i(mousePos.x, mousePos.y));
+			// Only add a wall if we weren't clicking on the last frame or if we were on a different tile
+			// and there was no wall already there.
+			if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
+				level.walls.emplace_back(mousePos.x, mousePos.y);
+				level.cacheWallShape(Vector2i(mousePos.x, mousePos.y));
+			}
+
+			previousMousePos.emplace(mousePos);
 		}
 
-		previousMousePos.emplace(mousePos);
-	}
+		if (Mouse::isButtonPressed(Mouse::Right)) {
+			wallIndex = getWallIndex(mousePos);
 
-	if (Mouse::isButtonPressed(Mouse::Right)) {
-		wallIndex = getWallIndex(mousePos);
+			if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
+				level.walls.erase(level.walls.begin() + wallIndex.value());
+				level.wallShapes.erase(level.wallShapes.begin() + wallIndex.value());
+			}
 
-		if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
-			level.walls.erase(level.walls.begin() + wallIndex.value());
-			level.wallShapes.erase(level.wallShapes.begin() + wallIndex.value());
+			previousMousePos.emplace(mousePos);
 		}
 
-		previousMousePos.emplace(mousePos);
+		previousMousePos = std::nullopt;
 	}
-
-	previousMousePos = std::nullopt;
 }
 
 
@@ -151,15 +153,6 @@ static double g_tickTimer = 0.0;
 
 
 void Game::pollInput(const double dt) {
-	if (Keyboard::isKeyPressed(Keyboard::Key::Space)) {
-		if (!wasPressed) {
-			onSpacePressed();
-			wasPressed = true;
-		}
-	}
-	else {
-		wasPressed = false;
-	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Escape)) {
 		win->close();
 		closing = true;
@@ -237,7 +230,31 @@ bool Game::isWall(const int cx, const int cy) const {
 	return false;
 }
 
-bool Game::im() const {
-	return entities.at(0)->im();
+bool Game::im() {
+	using namespace ImGui;
+
+	bool changed = false;
+
+	// Level Editor
+	changed |= CollapsingHeader("Level Editor", ImGuiTreeNodeFlags_DefaultOpen);
+	changed |= Checkbox("Enabled", &isEditingLevel);
+
+	if (isEditingLevel) {
+		const char* tileList[] = { "Wall", "Spawner" };
+		changed |= ListBox("Tile Type", &selectedTileType, tileList, 2);
+
+		if (Button("Save Level")) {
+			level.saveToFile("res/levels/test.txt");
+		}
+
+		if (Button("Load Level")) {
+			level.loadFromFile("res/levels/test.txt");
+		}
+	}
+
+	// Player
+	changed |= entities.at(0)->im();
+
+	return changed;
 }
 

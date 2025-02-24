@@ -1,4 +1,5 @@
 ﻿#pragma once
+
 #include <string>
 #include <vector>
 #include <SFML/Graphics/RectangleShape.hpp>
@@ -21,4 +22,7 @@ public:
 	// Data
 	std::vector<sf::Vector2i> walls;
 	std::vector<sf::RectangleShape> wallShapes;
+
+	std::vector<sf::Vector2i> enemySpawners;
+	std::vector<sf::RectangleShape> enemySpawnerShapes;
 };
