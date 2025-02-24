@@ -35,25 +35,7 @@ Game::Game(RenderWindow* win)
 
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 
-	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i)
-		level.walls.emplace_back(i, lastLine);
-
-	level.walls.emplace_back(0, lastLine - 1);
-	level.walls.emplace_back(0, lastLine - 2);
-	level.walls.emplace_back(0, lastLine - 3);
-
-	level.walls.emplace_back(cols - 1, lastLine - 1);
-	level.walls.emplace_back(cols - 1, lastLine - 2);
-	level.walls.emplace_back(cols - 1, lastLine - 3);
-
-	level.walls.emplace_back(cols >> 2, lastLine - 2);
-	level.walls.emplace_back(cols >> 2, lastLine - 3);
-	level.walls.emplace_back(cols >> 2, lastLine - 4);
-	level.walls.emplace_back((cols >> 2) + 1, lastLine - 4);
-	level.walls.emplace_back((cols >> 2) - 1, lastLine - 4);
-
-	level.walls.emplace_back(10, 10);
-	level.cacheWallShapes();
+	level.loadFromFile("res/levels/default.txt");
 
 	// Let's assume the first entity in the array is always the Player.
 	// TODO: Make that cleaner
