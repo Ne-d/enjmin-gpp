@@ -11,6 +11,7 @@
 #include "Enemy.hpp"
 #include "Entity.hpp"
 #include "HotReloadShader.hpp"
+#include "Level.hpp"
 #include "Player.hpp"
 
 
@@ -18,7 +19,6 @@ static int cols = C::RESOLUTION_X / C::GRID_SIZE;
 static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
 
 Game* Game::instance = nullptr;
-
 
 Game::Game(RenderWindow* win)
 	:
@@ -36,45 +36,30 @@ Game::Game(RenderWindow* win)
 	bgShader = new HotReloadShader("res/bg.vert", "res/bg.frag");
 
 	for (int i = 0; i < C::RESOLUTION_X / C::GRID_SIZE; ++i)
-		walls.emplace_back(i, lastLine);
+		level.walls.emplace_back(i, lastLine);
 
-	walls.emplace_back(0, lastLine - 1);
-	walls.emplace_back(0, lastLine - 2);
-	walls.emplace_back(0, lastLine - 3);
+	level.walls.emplace_back(0, lastLine - 1);
+	level.walls.emplace_back(0, lastLine - 2);
+	level.walls.emplace_back(0, lastLine - 3);
 
-	walls.emplace_back(cols - 1, lastLine - 1);
-	walls.emplace_back(cols - 1, lastLine - 2);
-	walls.emplace_back(cols - 1, lastLine - 3);
+	level.walls.emplace_back(cols - 1, lastLine - 1);
+	level.walls.emplace_back(cols - 1, lastLine - 2);
+	level.walls.emplace_back(cols - 1, lastLine - 3);
 
-	walls.emplace_back(cols >> 2, lastLine - 2);
-	walls.emplace_back(cols >> 2, lastLine - 3);
-	walls.emplace_back(cols >> 2, lastLine - 4);
-	walls.emplace_back((cols >> 2) + 1, lastLine - 4);
-	walls.emplace_back((cols >> 2) - 1, lastLine - 4);
+	level.walls.emplace_back(cols >> 2, lastLine - 2);
+	level.walls.emplace_back(cols >> 2, lastLine - 3);
+	level.walls.emplace_back(cols >> 2, lastLine - 4);
+	level.walls.emplace_back((cols >> 2) + 1, lastLine - 4);
+	level.walls.emplace_back((cols >> 2) - 1, lastLine - 4);
 
-	walls.emplace_back(10, 10);
-	cacheWalls();
+	level.walls.emplace_back(10, 10);
+	level.cacheWallShapes();
 
 	// Let's assume the first entity in the array is always the Player.
 	// TODO: Make that cleaner
 	entities.emplace_back(new Player(30, 60));
 
 	entities.emplace_back(new Enemy(69, 42));
-}
-
-void Game::cacheWalls()
-{
-	wallSprites.clear();
-
-	for (const Vector2i w : walls)
-		cacheWall(w);
-}
-
-void Game::cacheWall(const Vector2i wall) {
-	RectangleShape rect(Vector2f(16, 16));
-	rect.setPosition((float)wall.x * C::GRID_SIZE, (float)wall.y * C::GRID_SIZE);
-	rect.setFillColor(Color(0x07ff07ff));
-	wallSprites.push_back(rect);
 }
 
 bool Game::hasCollision(const int gridX, const int gridY) const {
@@ -113,8 +98,8 @@ optional<Vector2i> previousMousePos = std::nullopt;
 std::optional<size_t> Game::getWallIndex(const Vector2i pos) const {
 	int index = -1;
 
-	for (unsigned int i = 0; i < walls.size(); ++i)
-		if (walls.at(i) == pos)
+	for (unsigned int i = 0; i < level.walls.size(); ++i)
+		if (level.walls.at(i) == pos)
 			index = i;
 
 	if (index != -1)
@@ -139,8 +124,8 @@ void Game::processInput(Event ev) {
 		// Only add a wall if we weren't clicking on the last frame or if we were on a different tile
 		// and there was no wall already there.
 		if ((!previousMousePos || previousMousePos.value() != mousePos) && !wallIndex) {
-			walls.emplace_back(mousePos.x, mousePos.y);
-			cacheWall(Vector2i(mousePos.x, mousePos.y));
+			level.walls.emplace_back(mousePos.x, mousePos.y);
+			level.cacheWallShape(Vector2i(mousePos.x, mousePos.y));
 		}
 
 		previousMousePos.emplace(mousePos);
@@ -150,8 +135,8 @@ void Game::processInput(Event ev) {
 		wallIndex = getWallIndex(mousePos);
 
 		if ((!previousMousePos || previousMousePos.value() != mousePos) && wallIndex) {
-			walls.erase(walls.begin() + wallIndex.value());
-			wallSprites.erase(wallSprites.begin() + wallIndex.value());
+			level.walls.erase(level.walls.begin() + wallIndex.value());
+			level.wallShapes.erase(level.wallShapes.begin() + wallIndex.value());
 		}
 
 		previousMousePos.emplace(mousePos);
@@ -228,7 +213,7 @@ void Game::draw(RenderWindow& win) {
 
 	beforeParts.draw(win);
 
-	for (RectangleShape const& r : wallSprites)
+	for (RectangleShape const& r : level.wallShapes)
 		win.draw(r);
 
 	for (RectangleShape const& r : rects) 
@@ -245,14 +230,14 @@ void Game::onSpacePressed() {
 }
 
 bool Game::isWall(const int cx, const int cy) const {
-	for (const auto w : walls) {
+	for (const auto w : level.walls) {
 		if (w.x == cx && w.y == cy)
 			return true;
 	}
 	return false;
 }
 
-void Game::im() const {
-	entities.at(0)->im();
+bool Game::im() const {
+	return entities.at(0)->im();
 }
 

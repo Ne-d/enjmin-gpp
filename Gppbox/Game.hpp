@@ -3,13 +3,12 @@
 #include <optional>
 #include <vector>
 
+#include "Level.hpp"
 #include "SFML/Graphics.hpp"
-#include "SFML/System.hpp"
 #include "SFML/Window.hpp"
 
 #include "sys.hpp"
 
-#include "Particle.hpp"
 #include "ParticleMan.hpp"
 
 class Entity;
@@ -33,15 +32,12 @@ public:
 
 	bool							closing = false;
 
-	std::vector<sf::Vector2i> walls;
-	std::vector<sf::RectangleShape> wallSprites;
+	Level level;
 	std::vector<Entity*>			entities;
 
 	ParticleMan beforeParts;
 	ParticleMan afterParts;
 	
-	void cacheWalls();
-	void cacheWall(Vector2i wall);
 	bool hasCollision(int gridX, int gridY) const;
 	bool hasCollision(int gridX, int gridY, int width, int height) const;
 
@@ -53,8 +49,8 @@ public:
 
 	void update(double dt);
 
-	void draw(sf::RenderWindow& win);
+	void draw(RenderWindow& win);
 
 	bool isWall(int cx, int cy) const;
-	void im() const;
+	bool im() const;
 };
