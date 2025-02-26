@@ -47,7 +47,6 @@ sf::Vector2i Entity::getPixelPosition() const {
 
 
 void Entity::syncShape() {
-	
 }
 
 void Entity::update() {

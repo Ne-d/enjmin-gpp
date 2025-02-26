@@ -7,7 +7,8 @@
 
 Player::Player(const float x, const float y)
 	:
-	Character(x, y) {
+	Character(x, y),
+	shootTimer(200ms) {
 }
 
 void Player::update() {
@@ -38,11 +39,13 @@ void Player::pollInput() {
 
 	// Pew pew
 	if (!Game::instance->isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && shootTimer.isFinished()) {
+			shootTimer.restart();
+
 			const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
 			const float projectileY = cy + ry - 0.75;
 
-			game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection, 0 }, 1));
+			game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * 2, 0 }, 1));
 		}
 	}
 }

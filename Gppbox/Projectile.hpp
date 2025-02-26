@@ -9,7 +9,7 @@ public:
 	void updatePosition();
 
 	void update() override;
-	virtual void syncShape() override;
+	void syncShape() override;
 
 	float damage = 1;
 };

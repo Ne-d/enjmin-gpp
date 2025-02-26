@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Character.hpp"
+#include "Timer.h"
 
 class Player : public Character {
 public:
@@ -14,4 +15,5 @@ private:
 
 	// Data
 	int lastDirection = 1;
+	Timer shootTimer;
 };

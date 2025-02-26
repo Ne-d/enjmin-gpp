@@ -12,25 +12,29 @@ Projectile::Projectile(const sf::Vector2f position, const sf::Vector2f velocity,
 }
 
 void Projectile::updatePosition() {
-	rx += dx;
-	while (rx >= 1) {
+	const Game* game = Game::instance;
+
+	rx += dx * game->deltaFrame;
+	while (rx < 0.0f) {
+		cx--;
+		rx++;
+	}
+	while (rx > 1.0f) {
 		cx++;
 		rx--;
 	}
-	while (rx < 0) {
-		rx++;
-		cx--;
-	}
 
-	ry += dy;
-	while (ry >= 1) {
+	ry += dy * game->deltaFrame;
+	while (ry < 0.0f) {
+		cy--;
+		ry++;
+	}
+	while (ry > 1.0f) {
 		cy++;
 		ry--;
 	}
-	while (ry < 0) {
-		ry++;
-		cy--;
-	}
+
+	syncShape();
 }
 
 void Projectile::update() {
@@ -40,13 +44,11 @@ void Projectile::update() {
 
 	if (Game::instance->hasCollision(cx, cy))
 		shouldDie = true;
-
-	syncShape();
 }
 
 void Projectile::syncShape() {
 	Entity::syncShape();
 
 	const auto size = shape.getSize();
-	shape.setPosition(cx * C::GRID_SIZE + rx - size.x / 2, cy * C::GRID_SIZE + ry - size.y / 2);
+	shape.setPosition(((cx + rx) * C::GRID_SIZE) - size.x / 2, ((cy + ry) * C::GRID_SIZE) - size.y / 2);
 }
