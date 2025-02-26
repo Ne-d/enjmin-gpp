@@ -3,6 +3,7 @@
 #include "C.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
+#include "Math.hpp"
 
 Projectile::Projectile(const sf::Vector2f position, const sf::Vector2f velocity, const float damage)
 	:
@@ -50,7 +51,7 @@ void Projectile::update() {
 	const auto optionalEntityHit = Game::instance->hasCollisionWithEnemy(cx + rx, cy + ry);
 	if (optionalEntityHit && optionalEntityHit.value()->type == EntityType::Enemy) {
 		auto* enemy = (Enemy*)optionalEntityHit.value();
-		enemy->takeDamage(damage);
+		enemy->takeDamage(damage, sign(dx) * 0.5);
 		shouldDie = true;
 	}
 }

@@ -10,11 +10,13 @@ Character::Character(const float x, const float y)
 	moveInput(0) {
 }
 
-void Character::takeDamage(const float damage) {
+void Character::takeDamage(const float damage, const float recoil) {
 	health -= damage;
 
 	if (health <= 0)
 		shouldDie = true;
+
+	dx += recoil;
 }
 
 void Character::update() {
