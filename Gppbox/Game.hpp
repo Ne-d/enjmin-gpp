@@ -9,6 +9,8 @@
 #include "sys.hpp"
 
 #include "ParticleMan.hpp"
+#include "Player.hpp"
+#include "Projectile.hpp"
 
 class Entity;
 
@@ -18,6 +20,7 @@ class Game {
 public:
 	// Methods
 	explicit Game(sf::RenderWindow* win);
+	
 	bool hasCollision(int gridX, int gridY) const;
 	bool hasCollision(int gridX, int gridY, int width, int height) const;
 	
@@ -26,6 +29,8 @@ public:
 	void pollInput(double dt);
 	void onSpacePressed();
 
+	void spawnEnemies();
+	void addProjectile(Projectile* projectile);
 	void update(double dt);
 
 	void draw(RenderWindow& win);
@@ -49,6 +54,8 @@ public:
 	bool closing = false;
 
 	Level level;
+	Player* player;
+	
 	std::vector<Entity*> entities;
 
 	bool isEditingLevel = false;

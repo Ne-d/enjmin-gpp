@@ -15,9 +15,8 @@ public:
 
 	sf::Vector2i getPixelPosition() const;
 
-private:
-	void syncShape();
-	void updatePosition(double deltaFrame);
+protected:
+	virtual void syncShape();
 
 public:
 	// Methods
@@ -35,12 +34,14 @@ public:
 	float dy = 0;
 
 	int collisionWidth = 1;
-	int collisionHeight = 2;
+	int collisionHeight = 1;
 	
 	bool isOnGround = false;
 	bool isOnLeftWall = false;
 	bool isOnRightWall = false;
-	
+
+	bool shouldDie = false;
+
 	// Graphics
 	sf::RectangleShape shape;
 };

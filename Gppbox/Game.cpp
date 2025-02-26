@@ -14,10 +14,6 @@
 #include "Level.hpp"
 #include "Player.hpp"
 
-
-static int cols = C::RESOLUTION_X / C::GRID_SIZE;
-static int lastLine = C::RESOLUTION_Y / C::GRID_SIZE - 1;
-
 Game* Game::instance = nullptr;
 
 Game::Game(RenderWindow* win)
@@ -37,11 +33,9 @@ Game::Game(RenderWindow* win)
 
 	level.loadFromFile("res/levels/default.txt");
 
-	// Let's assume the first entity in the array is always the Player.
-	// TODO: Make that cleaner
-	entities.emplace_back(new Player(30, 60));
+	player = new Player(30, 60);
 
-	entities.emplace_back(new Enemy(69, 42));
+	spawnEnemies();
 }
 
 bool Game::hasCollision(const int gridX, const int gridY) const {
@@ -151,10 +145,18 @@ void Game::update(const double dt) {
 		bgShader->update(dt);
 
 	beforeParts.update(dt);
-	afterParts.update(dt);
 
-	for (auto* entity : entities)
+	player->update();
+
+	for (const auto& entity : entities)
 		entity->update();
+
+	for (unsigned int i = 0; i < entities.size(); ++i) {
+		if (entities.at(i)->shouldDie)
+			entities.erase(entities.begin() + i);
+	}
+
+	afterParts.update(dt);
 }
 
 void Game::draw(RenderWindow& win) {
@@ -173,6 +175,8 @@ void Game::draw(RenderWindow& win) {
 
 	level.draw(isEditingLevel);
 
+	win.draw(player->shape);
+	
 	for (const auto* const entity : entities)
 		win.draw(entity->shape);
 	
@@ -181,6 +185,16 @@ void Game::draw(RenderWindow& win) {
 
 void Game::onSpacePressed() {
 	
+}
+
+void Game::spawnEnemies() {
+	for (const auto& spawner : level.spawners) {
+		entities.emplace_back(new Enemy(spawner.x, spawner.y));
+	}
+}
+
+void Game::addProjectile(Projectile* projectile) {
+	entities.emplace_back(projectile);
 }
 
 bool Game::isWall(const int cx, const int cy) const {
@@ -216,7 +230,7 @@ bool Game::im() {
 	}
 
 	// Player
-	changed |= entities.at(0)->im();
+	changed |= player->im();
 
 	return changed;
 }

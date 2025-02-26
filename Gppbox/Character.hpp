@@ -5,11 +5,13 @@
 class Character : public Entity {
 public:
 	explicit Character(float x, float y);
+	bool im() override;
 
 protected:
 	// Methods
 	void update() override;
-	bool im() override;
+	void updatePosition();
+	virtual void syncShape() override;
 
 	// Input Data
 	float moveInput;

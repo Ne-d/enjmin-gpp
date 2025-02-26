@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Character.hpp"
-#include "Entity.hpp"
 
 class Player : public Character {
 public:
@@ -12,4 +11,7 @@ public:
 private:
 	// Methods
 	void pollInput();
+
+	// Data
+	int lastDirection = 1;
 };
