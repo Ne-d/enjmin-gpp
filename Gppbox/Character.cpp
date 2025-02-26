@@ -10,6 +10,13 @@ Character::Character(const float x, const float y)
 	moveInput(0) {
 }
 
+void Character::takeDamage(const float damage) {
+	health -= damage;
+
+	if (health <= 0)
+		shouldDie = true;
+}
+
 void Character::update() {
 	// Only apply movement if target speed is faster than current speed
 	// Otherwise apply friction

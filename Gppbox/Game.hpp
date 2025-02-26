@@ -23,6 +23,7 @@ public:
 	
 	bool hasCollision(int gridX, int gridY) const;
 	bool hasCollision(int gridX, int gridY, int width, int height) const;
+	std::optional<Entity*> hasCollisionWithEnemy(float x, float y) const;
 	
 	void processInput(sf::Event ev);
 

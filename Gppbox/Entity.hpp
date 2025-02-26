@@ -2,6 +2,13 @@
 
 #include <SFML/Graphics.hpp>
 
+enum class EntityType : uint8_t {
+	Player,
+	Enemy,
+	Projectile,
+	Other
+};
+
 class Entity
 {
 public:
@@ -22,6 +29,9 @@ public:
 	// Methods
 	virtual void update();
 	virtual bool im();
+
+	//Data
+	EntityType type;
 	
 	// Base coordinates
 	int cx = 0;

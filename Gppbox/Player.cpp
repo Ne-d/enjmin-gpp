@@ -9,6 +9,7 @@ Player::Player(const float x, const float y)
 	:
 	Character(x, y),
 	shootTimer(200ms) {
+	type = EntityType::Player;
 }
 
 void Player::update() {

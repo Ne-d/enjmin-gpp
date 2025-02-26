@@ -8,7 +8,8 @@
 
 Entity::Entity(const float x, const float y, sf::RectangleShape shape)
 	:
-	shape(std::move(shape)) {
+	shape(std::move(shape)),
+	type(EntityType::Other) {
 	setGridPosition(x, y);
 }
 

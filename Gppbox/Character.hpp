@@ -5,18 +5,20 @@
 class Character : public Entity {
 public:
 	explicit Character(float x, float y);
+
+	void takeDamage(float damage);
+	
 	bool im() override;
 
 protected:
 	// Methods
 	void update() override;
 	void updatePosition();
-	virtual void syncShape() override;
+	void syncShape() override;
 
-	// Input Data
+	// Data
 	float moveInput;
-
-	// Movement Data
+	
 	float moveSpeed = 0.3f;
 	float jumpImpulse = 1.5f;
 
@@ -26,4 +28,6 @@ protected:
 	float frictionY = 0.91f;
 
 	float gravity = 0.075f;
+
+	float health = 1;
 };

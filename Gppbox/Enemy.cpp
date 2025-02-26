@@ -2,9 +2,11 @@
 
 #include "Game.hpp"
 
-Enemy::Enemy(float x, float y)
+Enemy::Enemy(const float x, const float y)
 	:
 	Character(x, y) {
+	type = EntityType::Enemy;
+	health = 5;
 	moveInput = -1;
 	shape.setFillColor(Color::Red);
 }

@@ -1,12 +1,14 @@
 ﻿#include "Projectile.hpp"
 
 #include "C.hpp"
+#include "Enemy.hpp"
 #include "Game.hpp"
 
 Projectile::Projectile(const sf::Vector2f position, const sf::Vector2f velocity, const float damage)
 	:
 	Entity(position.x, position.y, sf::RectangleShape({ C::GRID_SIZE / 2, C::GRID_SIZE / 2 })),
 	damage(damage) {
+	type = EntityType::Projectile;
 	dx = velocity.x;
 	dy = velocity.y;
 }
@@ -44,6 +46,13 @@ void Projectile::update() {
 
 	if (Game::instance->hasCollision(cx, cy))
 		shouldDie = true;
+
+	const auto optionalEntityHit = Game::instance->hasCollisionWithEnemy(cx + rx, cy + ry);
+	if (optionalEntityHit && optionalEntityHit.value()->type == EntityType::Enemy) {
+		auto* enemy = (Enemy*)optionalEntityHit.value();
+		enemy->takeDamage(damage);
+		shouldDie = true;
+	}
 }
 
 void Projectile::syncShape() {

@@ -69,6 +69,20 @@ bool Game::hasCollision(const int gridX, const int gridY, const int width, const
 	return collisionSoFar;
 }
 
+std::optional<Entity*> Game::hasCollisionWithEnemy(const float x, const float y) const {
+	for (Entity* const e : entities) {
+		const float startX = e->cx + e->rx;
+		const float endX = startX + e->collisionWidth;
+		const float startY = e->cy + e->ry;
+		const float endY = startY - e->collisionHeight;
+
+		if (x >= startX && x <= endX && y <= startY && y >= endY)
+			return std::make_optional(e);
+	}
+
+	return std::nullopt;
+}
+
 optional<Vector2i> previousMousePos = std::nullopt;
 
 void Game::processInput(Event ev) {
@@ -151,10 +165,9 @@ void Game::update(const double dt) {
 	for (const auto& entity : entities)
 		entity->update();
 
-	for (unsigned int i = 0; i < entities.size(); ++i) {
+	for (int i = entities.size() - 1; i >= 0; --i)
 		if (entities.at(i)->shouldDie)
 			entities.erase(entities.begin() + i);
-	}
 
 	afterParts.update(dt);
 }
