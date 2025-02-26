@@ -8,6 +8,7 @@ public:
 	explicit Player(float x, float y);
 
 	void update() override;
+	void shoot();
 
 private:
 	// Methods

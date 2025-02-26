@@ -1,9 +1,12 @@
 ﻿#include "Player.hpp"
 
-#include "C.hpp"
+#include <cmath>
+#include <iostream>
+
 #include "Enemy.hpp"
 #include "Game.hpp"
 #include "imgui.h"
+#include "Math.hpp"
 
 Player::Player(const float x, const float y)
 	:
@@ -23,30 +26,47 @@ void Player::update() {
 		lastDirection = -1;
 }
 
-void Player::pollInput() {
+void Player::shoot() {
 	Game* const game = Game::instance;
+	shootTimer.start();
+
+	const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
+	const float projectileY = cy + ry - 0.75;
+
+	game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * 2, 0 }, 1));
+	dx -= lastDirection * 0.1;
+}
+
+void Player::pollInput() {
 	moveInput = 0;
 
-	// Movement
+	// Controller Movement
+	float const stickValue = sf::Joystick::getAxisPosition(0, Joystick::Axis::X) / 100.0f;
+	constexpr float stickDeadzone = 0.2f;
+
+	if (std::abs(stickValue) > stickDeadzone)
+		moveInput = lerp(stickDeadzone * sign(stickValue), 1.0f, stickValue);
+
+	// Keyboard Movement
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
 		moveInput -= 1;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		moveInput += 1;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isOnGround) {
+	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Joystick::isButtonPressed(0, 0)) && isOnGround) {
 		dy = -jumpImpulse;
 	}
 
+	// Normalise moveInput to avoid accumulation between controller and keyboard.
+	moveInput = std::clamp(moveInput, -1.0f, 1.0f);
+
 	// Pew pew
+	constexpr float triggerDeadzone = 50.0f;
 	if (!Game::instance->isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && shootTimer.isFinished()) {
-			shootTimer.start();
-
-			const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
-			const float projectileY = cy + ry - 0.75;
-
-			game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * 2, 0 }, 1));
+		if ((Mouse::isButtonPressed(Mouse::Left) || Joystick::getAxisPosition(0, Joystick::Axis::Z) < -triggerDeadzone)
+			&& shootTimer.isFinished()) {
+			shoot();
 		}
 	}
 }
