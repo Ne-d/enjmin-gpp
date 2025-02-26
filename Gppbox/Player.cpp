@@ -40,7 +40,7 @@ void Player::pollInput() {
 	// Pew pew
 	if (!Game::instance->isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && shootTimer.isFinished()) {
-			shootTimer.restart();
+			shootTimer.start();
 
 			const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
 			const float projectileY = cy + ry - 0.75;
