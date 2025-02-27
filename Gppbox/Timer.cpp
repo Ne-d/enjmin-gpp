@@ -6,7 +6,12 @@ Timer::Timer(const std::chrono::duration<double> duration)
 	start();
 }
 
-bool Timer::isFinished() const {
+bool Timer::isFinished() {
+	if (shouldSkip) {
+		shouldSkip = false;
+		return true;
+	}
+	
 	return std::chrono::steady_clock::now() >= endTime;
 }
 
@@ -18,4 +23,8 @@ void Timer::start() {
 void Timer::start(const std::chrono::duration<double> duration) {
 	this->duration = duration;
 	start();
+}
+
+void Timer::skip() {
+	shouldSkip = true;
 }

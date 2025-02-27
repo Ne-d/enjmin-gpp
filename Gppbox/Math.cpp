@@ -21,3 +21,25 @@ float random(const float min, const float max) {
 	static std::uniform_real_distribution<> distribution(min, max);
 	return distribution(randomEngine);
 }
+
+float distanceSquared(const sf::Vector2f a, const sf::Vector2f b) {
+	const sf::Vector2f diff = a - b;
+	return lengthSquared(diff);
+}
+
+float distance(const sf::Vector2f a, const sf::Vector2f b) {
+	const sf::Vector2f diff = a - b;
+	return length(diff);
+}
+
+float lengthSquared(const sf::Vector2f a) {
+	return a.x * a.x + a.y * a.y;
+}
+
+float length(const sf::Vector2f a) {
+	return sqrtf(lengthSquared(a));
+}
+
+sf::Vector2f normalize(const sf::Vector2f a) {
+	return a / length(a);
+}

@@ -8,6 +8,8 @@ Character::Character(const float x, const float y)
 	:
 	Entity(x, y, RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })),
 	moveInput(0) {
+	collisionWidth = 1;
+	collisionHeight = 2;
 }
 
 void Character::takeDamage(const float damage, const float recoil) {

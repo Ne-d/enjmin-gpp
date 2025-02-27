@@ -7,12 +7,16 @@
 #include "Game.hpp"
 #include "imgui.h"
 #include "Math.hpp"
+#include "Missile.hpp"
 
 Player::Player(const float x, const float y)
 	:
 	Character(x, y),
-	shootTimer(200ms) {
+	shootTimer(200ms),
+	missileTimer(2000ms) {
 	type = EntityType::Player;
+	shootTimer.skip();
+	missileTimer.skip();
 }
 
 void Player::update() {
@@ -36,6 +40,16 @@ void Player::shoot() {
 	game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * 2, 0 }, 1));
 	dx -= lastDirection * 0.1;
 	game->camera.addScreenShake(3, { (float)-lastDirection, 0 }, 50ms);
+}
+
+void Player::shootMissile() {
+	Game* const game = Game::instance;
+	missileTimer.start();
+
+	const float missileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
+	const float missileY = cy + ry - 0.75;
+
+	game->addProjectile(new Missile({ missileX, missileY }));
 }
 
 void Player::pollInput() {
@@ -68,6 +82,11 @@ void Player::pollInput() {
 		if ((Mouse::isButtonPressed(Mouse::Left) || Joystick::getAxisPosition(0, Joystick::Axis::Z) < -triggerDeadzone)
 			&& shootTimer.isFinished()) {
 			shoot();
+		}
+
+		if ((Mouse::isButtonPressed(Mouse::Right) || Joystick::getAxisPosition(0, Joystick::Axis::Z) > triggerDeadzone)
+			&& missileTimer.isFinished()) {
+			shootMissile();
 		}
 	}
 }

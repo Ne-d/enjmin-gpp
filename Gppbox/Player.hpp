@@ -9,6 +9,7 @@ public:
 
 	void update() override;
 	void shoot();
+	void shootMissile();
 
 private:
 	// Methods
@@ -17,4 +18,5 @@ private:
 	// Data
 	int lastDirection = 1;
 	Timer shootTimer;
+	Timer missileTimer;
 };
