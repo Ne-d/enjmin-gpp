@@ -10,6 +10,7 @@ public:
 	void update() override;
 	void shoot();
 	void shootMissile();
+	void shootLaser();
 
 private:
 	// Methods
@@ -19,4 +20,5 @@ private:
 	int lastDirection = 1;
 	Timer shootTimer;
 	Timer missileTimer;
+	Timer laserTimer;
 };

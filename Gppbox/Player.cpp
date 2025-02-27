@@ -6,6 +6,7 @@
 #include "Enemy.hpp"
 #include "Game.hpp"
 #include "imgui.h"
+#include "Laser.hpp"
 #include "Math.hpp"
 #include "Missile.hpp"
 
@@ -13,10 +14,12 @@ Player::Player(const float x, const float y)
 	:
 	Character(x, y),
 	shootTimer(200ms),
-	missileTimer(2000ms) {
+	missileTimer(2000ms),
+	laserTimer(5000ms) {
 	type = EntityType::Player;
 	shootTimer.skip();
 	missileTimer.skip();
+	laserTimer.skip();
 }
 
 void Player::update() {
@@ -50,6 +53,16 @@ void Player::shootMissile() {
 	const float missileY = cy + ry - 0.75;
 
 	game->addProjectile(new Missile({ missileX, missileY }));
+}
+
+void Player::shootLaser() {
+	Game* const game = Game::instance;
+	laserTimer.start();
+
+	const float laserX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
+	const float laserY = cy + ry - 2;
+
+	game->entities.emplace_back(new Laser({ laserX, laserY }, lastDirection));
 }
 
 void Player::pollInput() {
@@ -87,6 +100,10 @@ void Player::pollInput() {
 		if ((Mouse::isButtonPressed(Mouse::Right) || Joystick::getAxisPosition(0, Joystick::Axis::Z) > triggerDeadzone)
 			&& missileTimer.isFinished()) {
 			shootMissile();
+		}
+
+		if ((Mouse::isButtonPressed(Mouse::Middle) || Joystick::isButtonPressed(0, 3)) && laserTimer.isFinished()) {
+			shootLaser();
 		}
 	}
 }

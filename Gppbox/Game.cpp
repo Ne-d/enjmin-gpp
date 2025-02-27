@@ -167,9 +167,12 @@ void Game::update(const double dt) {
 	for (const auto& entity : entities)
 		entity->update();
 
-	for (int i = entities.size() - 1; i >= 0; --i)
-		if (entities.at(i)->shouldDie)
+	for (int i = entities.size() - 1; i >= 0; --i) {
+		if (entities.at(i)->shouldDie) {
+			delete entities.at(i);
 			entities.erase(entities.begin() + i);
+		}
+	}
 
 	afterParts.update(dt);
 }

@@ -13,6 +13,7 @@ Missile::Missile(const sf::Vector2f position)
 	dy = -1;
 }
 
+// TODO: This might not actually find the closest enemy for some reason.
 void Missile::findTarget() {
 	Entity* closestEntity = nullptr;
 

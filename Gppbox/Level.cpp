@@ -112,7 +112,7 @@ void Level::removeTile(const int x, const int y) {
 void Level::cacheWallShape(const sf::Vector2i position) {
 	sf::RectangleShape rect(sf::Vector2f(16, 16));
 	rect.setPosition((float)position.x * C::GRID_SIZE, (float)position.y * C::GRID_SIZE);
-	rect.setFillColor(sf::Color(0x07ff07ff));
+	rect.setFillColor(sf::Color(128, 128, 128));
 	wallShapes.push_back(rect);
 }
 
