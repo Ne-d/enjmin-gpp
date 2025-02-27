@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Camera.hpp"
 #include "Level.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
@@ -56,6 +57,7 @@ public:
 
 	Level level;
 	Player* player;
+	Camera camera;
 	
 	std::vector<Entity*> entities;
 

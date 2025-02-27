@@ -14,3 +14,8 @@ void Timer::start() {
 	startTime = std::chrono::steady_clock::now();
 	endTime = startTime + duration;
 }
+
+void Timer::start(const std::chrono::duration<double> duration) {
+	this->duration = duration;
+	start();
+}

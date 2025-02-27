@@ -18,7 +18,8 @@ Game* Game::instance = nullptr;
 
 Game::Game(RenderWindow* win)
 	:
-	win(win) {
+	win(win),
+	camera({ C::RESOLUTION_X / 2, C::RESOLUTION_Y / 2 }, { C::RESOLUTION_X, C::RESOLUTION_Y }) {
 	instance = this;
 	bg = RectangleShape(Vector2f((float)win->getSize().x, (float)win->getSize().y));
 
@@ -158,6 +159,7 @@ void Game::update(const double dt) {
 	if (bgShader != nullptr)
 		bgShader->update(dt);
 
+	camera.update();
 	beforeParts.update(dt);
 
 	player->update();
@@ -174,6 +176,8 @@ void Game::update(const double dt) {
 
 void Game::draw(RenderWindow& win) {
 	if (closing) return;
+
+	win.setView(camera.view);
 
 	RenderStates states = RenderStates::Default;
 	Shader* sh = &bgShader->sh;

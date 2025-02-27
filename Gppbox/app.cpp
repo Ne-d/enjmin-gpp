@@ -48,7 +48,7 @@ int main()
 	
     //sf::RenderWindow window(sf::VideoMode(1920, 1080,32), "SFML works!");
     //sf::RenderWindow window(sf::VideoMode(800, 600,32), "SFML works!");
-    sf::RenderWindow window(sf::VideoMode(C::RESOLUTION_X, C::RESOLUTION_Y,32), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(C::RESOLUTION_X, C::RESOLUTION_Y, 32), "Enjminshake");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(160);
 	

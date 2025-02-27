@@ -35,6 +35,7 @@ void Player::shoot() {
 
 	game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * 2, 0 }, 1));
 	dx -= lastDirection * 0.1;
+	game->camera.addScreenShake(3, { (float)-lastDirection, 0 }, 50ms);
 }
 
 void Player::pollInput() {
