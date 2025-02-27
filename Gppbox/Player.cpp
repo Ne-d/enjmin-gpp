@@ -73,7 +73,7 @@ void Player::pollInput() {
 	constexpr float stickDeadzone = 0.2f;
 
 	if (std::abs(stickValue) > stickDeadzone)
-		moveInput = lerp(stickDeadzone * sign(stickValue), 1.0f, stickValue);
+		moveInput = std::lerp(stickDeadzone * sign(stickValue), 1.0f, stickValue);
 
 	// Keyboard Movement
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
