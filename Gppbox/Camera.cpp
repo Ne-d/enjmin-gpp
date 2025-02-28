@@ -29,7 +29,9 @@ void Camera::update() {
 
 void Camera::addScreenShake(const float magnitude, const sf::Vector2f direction,
 							const std::chrono::duration<float> duration) {
-	screenShakeTimer.start(duration);
-	screenShakeMagnitude = magnitude;
-	screenShakeDirection = direction;
+	if (std::chrono::steady_clock::now() + duration > screenShakeTimer.endTime) {
+		screenShakeTimer.start(duration);
+		screenShakeMagnitude = magnitude;
+		screenShakeDirection = direction;
+	}
 }

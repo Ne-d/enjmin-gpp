@@ -13,11 +13,11 @@ public:
 
 	void skip();
 
-private:
-	bool shouldSkip = false;
-	
 	std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> startTime;
 	std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<double>> endTime;
+	
+private:
+	bool shouldSkip = false;
 
 	std::chrono::duration<double> duration;
 };

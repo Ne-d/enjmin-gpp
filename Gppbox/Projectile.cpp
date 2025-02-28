@@ -12,6 +12,8 @@ Projectile::Projectile(const Vector2f position, const Vector2f velocity, const f
 	type = EntityType::Projectile;
 	dx = velocity.x;
 	dy = velocity.y;
+
+	shape.setFillColor(Color(255, 255, 128));
 }
 
 void Projectile::updatePosition() {
