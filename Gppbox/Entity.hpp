@@ -33,6 +33,8 @@ public:
 	virtual void update();
 	virtual bool im();
 
+	virtual void draw() const;
+
 	//Data
 	EntityType type;
 	

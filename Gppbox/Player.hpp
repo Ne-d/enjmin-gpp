@@ -16,7 +16,7 @@ public:
 	void shootLaser();
 
 	void syncShape() override;
-	void draw();
+	void draw() const override;
 
 	std::optional<Enemy*> findClosestTarget();
 

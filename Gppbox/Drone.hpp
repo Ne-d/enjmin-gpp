@@ -10,7 +10,7 @@ public:
 
 	void update() override;
 	void syncShape() override;
-	void draw();
+	void draw() const override;
 
 	void shoot();
 

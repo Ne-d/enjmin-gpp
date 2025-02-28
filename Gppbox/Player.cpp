@@ -82,7 +82,7 @@ void Player::syncShape() {
 	muzzleFlashShape.setPosition(x * C::GRID_SIZE, y * C::GRID_SIZE);
 }
 
-void Player::draw() {
+void Player::draw() const {
 	const Game* const game = Game::instance;
 
 	if (muzzleFlashShape.getRadius() > 0)

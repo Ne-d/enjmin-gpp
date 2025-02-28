@@ -10,6 +10,9 @@ public:
 
 	void update() override;
 	void syncShape() override;
+	void draw() const override;
+
+	virtual void die();
 
 	float damage = 1;
 };

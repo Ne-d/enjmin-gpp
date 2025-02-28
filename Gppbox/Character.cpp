@@ -48,6 +48,7 @@ void Character::syncShape() {
 	);
 }
 
+
 bool Character::im() {
 	const bool entityChanged = Entity::im();
 

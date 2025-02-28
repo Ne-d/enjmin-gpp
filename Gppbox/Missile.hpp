@@ -9,6 +9,9 @@ public:
 
 	void findTarget();
 	void update() override;
+	void die() override;
+
+	void draw() const override;
 
 	// Data
 	Entity* target;
@@ -18,4 +21,9 @@ public:
 	float turnRateIncrease = 0.0005f;
 
 	float targetSpeed = 0.75f;
+
+	bool exploded = false;
+	sf::CircleShape explosionShape;
+	float explosionSize = 64;
+	float explosionShrinkSpeed = 1.5f;
 };

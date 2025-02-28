@@ -40,19 +40,23 @@ void Projectile::updatePosition() {
 	syncShape();
 }
 
+void Projectile::die() {
+	shouldDie = true;
+}
+
 void Projectile::update() {
 	Entity::update();
 
 	updatePosition();
 
 	if (Game::instance->hasCollision(cx, cy))
-		shouldDie = true;
+		die();
 
 	const auto optionalEntityHit = Game::instance->hasCollisionWithEnemy(cx + rx, cy + ry);
 	if (optionalEntityHit && optionalEntityHit.value()->type == EntityType::Enemy) {
 		auto* enemy = (Enemy*)optionalEntityHit.value();
 		enemy->takeDamage(damage, sign(dx) * 0.5);
-		shouldDie = true;
+		die();
 	}
 }
 
@@ -61,4 +65,8 @@ void Projectile::syncShape() {
 
 	const auto size = shape.getSize();
 	shape.setPosition(((cx + rx) * C::GRID_SIZE) - size.x / 2, ((cy + ry) * C::GRID_SIZE) - size.y / 2);
+}
+
+void Projectile::draw() const {
+	Entity::draw();
 }

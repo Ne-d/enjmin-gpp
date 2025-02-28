@@ -201,7 +201,7 @@ void Game::draw(RenderWindow& win) {
 	drone->draw();
 	
 	for (const auto* const entity : entities)
-		win.draw(entity->shape);
+		entity->draw();
 	
 	afterParts.draw(win);
 }

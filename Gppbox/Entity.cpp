@@ -166,3 +166,7 @@ bool Entity::im() {
 
 	return false;
 }
+
+void Entity::draw() const {
+	Game::instance->win->draw(shape);
+}
