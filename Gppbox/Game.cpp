@@ -35,6 +35,7 @@ Game::Game(RenderWindow* win)
 	level.loadFromFile("res/levels/default.txt");
 
 	player = new Player(30, 60);
+	drone = new Drone(player->cx, player->cy - 10);
 
 	spawnEnemies();
 }
@@ -163,6 +164,7 @@ void Game::update(const double dt) {
 	beforeParts.update(dt);
 
 	player->update();
+	drone->update();
 
 	for (const auto& entity : entities)
 		entity->update();
@@ -195,7 +197,8 @@ void Game::draw(RenderWindow& win) {
 
 	level.draw(isEditingLevel);
 
-	win.draw(player->shape);
+	player->draw();
+	win.draw(drone->shape);
 	
 	for (const auto* const entity : entities)
 		win.draw(entity->shape);

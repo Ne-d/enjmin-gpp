@@ -4,7 +4,7 @@
 
 class Character : public Entity {
 public:
-	explicit Character(float x, float y);
+	explicit Character(float x, float y, int width, int height);
 
 	void takeDamage(float damage, float recoil);
 	
@@ -13,7 +13,6 @@ public:
 protected:
 	// Methods
 	void update() override;
-	void updatePosition();
 	void syncShape() override;
 
 	// Data

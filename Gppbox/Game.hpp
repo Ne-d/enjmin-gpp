@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Camera.hpp"
+#include "Drone.hpp"
 #include "Level.hpp"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
@@ -13,6 +14,7 @@
 #include "Player.hpp"
 #include "Projectile.hpp"
 
+class Drone;
 class Entity;
 
 class HotReloadShader;
@@ -56,7 +58,10 @@ public:
 	bool closing = false;
 
 	Level level;
+
 	Player* player;
+	Drone* drone;
+	
 	Camera camera;
 	
 	std::vector<Entity*> entities;

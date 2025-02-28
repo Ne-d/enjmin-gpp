@@ -4,7 +4,7 @@
 
 Enemy::Enemy(const float x, const float y)
 	:
-	Character(x, y) {
+	Character(x, y, 1, 2) {
 	type = EntityType::Enemy;
 	health = 5;
 	moveInput = -1;

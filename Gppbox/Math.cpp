@@ -2,7 +2,7 @@
 
 #include <random>
 
-float lerp(const float a, const float b, const float f) {
+float lerpF(const float a, const float b, const float f) {
 	return a * (1.0f - f) + (b * f);
 }
 

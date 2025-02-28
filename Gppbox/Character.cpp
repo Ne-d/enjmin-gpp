@@ -4,12 +4,12 @@
 #include "Game.hpp"
 #include "imgui.h"
 
-Character::Character(const float x, const float y)
+Character::Character(const float x, const float y, const int width, const int height)
 	:
-	Entity(x, y, RectangleShape({ C::GRID_SIZE, 2 * C::GRID_SIZE })),
+	Entity(x, y, RectangleShape({ (float)width * C::GRID_SIZE, (float)height * C::GRID_SIZE })),
 	moveInput(0) {
-	collisionWidth = 1;
-	collisionHeight = 2;
+	collisionWidth = width;
+	collisionHeight = height;
 }
 
 void Character::takeDamage(const float damage, const float recoil) {
@@ -34,85 +34,9 @@ void Character::update() {
 	dy += gravity * Game::instance->deltaFrame;
 	dy *= pow(frictionY, Game::instance->deltaFrame);
 
-	updatePosition();
+	updatePositionWithCollision();
 	
 	Entity::update();
-}
-
-void Character::updatePosition() {
-	const Game* game = Game::instance;
-
-	// Integrate position based on velocity
-	rx += dx * game->deltaFrame;
-	ry += dy * game->deltaFrame;
-
-	// Collisions
-	constexpr float collisionThresholdX = 0.0f;
-
-	isOnLeftWall = false;
-	// X(-) Movement collisions
-	do {
-		if (game->hasCollision(cx - 1, cy, collisionWidth, collisionHeight + 1) && rx <= collisionThresholdX) {
-			rx = collisionThresholdX;
-			dx = 0.0f;
-			isOnLeftWall = true;
-		}
-		if (rx < 0.0f) {
-			cx--;
-			rx++;
-		}
-	}
-	while (rx < 0.0f);
-
-	isOnRightWall = false;
-	// X(+) Movement collisions
-	do {
-		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight + 1) && rx >= collisionThresholdX) {
-			rx = collisionThresholdX;
-			dx = 0.0f;
-			isOnRightWall = true;
-		}
-		if (rx > 1.0f) {
-			cx++;
-			rx--;
-		}
-	}
-	while (rx > 1.0f);
-
-	// Y(-) Movement collisions
-	do {
-		if (game->hasCollision(cx, cy - 2, collisionWidth + 1, collisionHeight) && ry < 0.0f) {
-			ry = 0.0f;
-			dy = 0.0f;
-		}
-
-		isOnGround = false;
-
-		if (ry < 0.0f) {
-			cy--;
-			ry++;
-		}
-	}
-	while (ry < 0.0f);
-
-	// Y(+) Movement collisions
-	do {
-		if (game->hasCollision(cx, cy + 1, collisionWidth + 1, collisionHeight) && ry >= 0.99f) {
-			ry = 0.99f;
-			dy = 0.0f;
-			isOnGround = true;
-		}
-		else
-			isOnGround = false;
-
-		if (ry > 1.0f) {
-			cy++;
-			ry--;
-		}
-	}
-	while (ry > 1.0f);
-
-	syncShape();
 }
 
 void Character::syncShape() {
@@ -120,7 +44,7 @@ void Character::syncShape() {
 
 	shape.setPosition(
 		(cx + rx) * C::GRID_SIZE,
-		(cy + ry - 2) * C::GRID_SIZE
+		(cy + ry - collisionHeight) * C::GRID_SIZE
 	);
 }
 

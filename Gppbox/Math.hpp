@@ -5,7 +5,7 @@
 constexpr double PI = 3.141592653589793238463;
 constexpr float PI_F = 3.14159265358979f;
 
-float lerp(float a, float b, float f);
+float lerpF(float a, float b, float f);
 float sign(float f);
 float random(float min, float max);
 

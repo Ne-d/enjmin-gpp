@@ -6,6 +6,7 @@ enum class EntityType : uint8_t {
 	Player,
 	Enemy,
 	Projectile,
+	Drone,
 	Other
 };
 
@@ -21,6 +22,8 @@ public:
 	void setGridVelocity(float x, float y);
 
 	sf::Vector2i getPixelPosition() const;
+
+	virtual void updatePositionWithCollision();
 
 protected:
 	virtual void syncShape();

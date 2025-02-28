@@ -13,24 +13,11 @@ Missile::Missile(const sf::Vector2f position)
 	dy = -1;
 }
 
-// TODO: This might not actually find the closest enemy for some reason.
 void Missile::findTarget() {
-	Entity* closestEntity = nullptr;
+	const std::optional<Enemy*> optionalTarget = Game::instance->player->findClosestTarget();
 
-	const Vector2f position = { cx + rx, cy + ry };
-	float minDistance = std::numeric_limits<float>::max();
-	for (auto* const entity : Game::instance->entities) {
-		if (entity->type != EntityType::Enemy)
-			continue;
-
-		const Vector2f entityPosition = { entity->cx + entity->rx, entity->cy + entity->ry };
-		const float dist = distance(position, entityPosition);
-
-		minDistance = std::min(dist, minDistance);
-		closestEntity = entity;
-	}
-
-	target = closestEntity;
+	if (optionalTarget)
+		target = *optionalTarget;
 }
 
 void Missile::update() {
@@ -50,7 +37,7 @@ void Missile::update() {
 		dx = velocity.x;
 		dy = velocity.y;
 
-		turnRate = lerp(turnRate, 1, turnRateIncrease);
+		turnRate = lerpF(turnRate, 1, turnRateIncrease);
 	}
 
 	Projectile::update();
