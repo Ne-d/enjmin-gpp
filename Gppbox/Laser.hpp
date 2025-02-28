@@ -6,10 +6,11 @@ class Laser : public Entity {
 public:
 	// Methods
 	Laser(sf::Vector2f position, int direction);
+	~Laser() override = default;
 
 	void update() override;
 	void syncShape() override;
-	void damageEnemies();
+	void damageEnemies() const;
 
 	// Data
 	const int direction;

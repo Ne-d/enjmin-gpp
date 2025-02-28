@@ -5,12 +5,12 @@
 class Character : public Entity {
 public:
 	explicit Character(float x, float y, int width, int height);
+	~Character() override = default;
 
 	virtual void takeDamage(float damage, float recoil);
 	
 	bool im() override;
-
-protected:
+	
 	// Methods
 	void update() override;
 	void syncShape() override;

@@ -87,7 +87,7 @@ std::optional<Entity*> Game::hasCollisionWithEnemy(const float x, const float y)
 
 optional<Vector2i> previousMousePos = std::nullopt;
 
-void Game::processInput(Event ev) {
+void Game::processInput(const Event& ev) {
 	if (ev.type == Event::Closed) {
 		win->close();
 		closing = true;
@@ -136,7 +136,7 @@ void Game::pollInput(const double dt) {
 	}
 }
 
-int blendModeIndex(BlendMode bm) {
+int blendModeIndex(const BlendMode& bm) {
 	if (bm == BlendAlpha)
 		return 0;
 	if (bm == BlendAdd)
@@ -213,6 +213,15 @@ void Game::onSpacePressed() {
 void Game::spawnEnemies() {
 	for (const auto& spawner : level.spawners) {
 		entities.emplace_back(new Enemy(spawner.x, spawner.y));
+	}
+}
+
+void Game::removeEnemies() {
+	for (int i = entities.size() - 1; i >= 0; --i) {
+		if (entities.at(i)->type == EntityType::Enemy) {
+			delete entities.at(i);
+			entities.erase(entities.begin() + i);
+		}
 	}
 }
 

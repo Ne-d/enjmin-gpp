@@ -6,6 +6,7 @@ class Missile : public Projectile {
 public:
 	// Methods
 	explicit Missile(sf::Vector2f position);
+	~Missile() override = default;
 
 	void findTarget();
 	void update() override;

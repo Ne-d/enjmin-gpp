@@ -1,12 +1,10 @@
 ﻿#include "Missile.hpp"
 
-#include <algorithm>
-
 #include "C.hpp"
 #include "Game.hpp"
 #include "Math.hpp"
 
-Missile::Missile(const sf::Vector2f position)
+Missile::Missile(const Vector2f position)
 	:
 	Projectile(position, { 0, 0 }, 10) {
 	findTarget();

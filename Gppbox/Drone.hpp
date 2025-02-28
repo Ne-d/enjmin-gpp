@@ -7,6 +7,7 @@ class Drone : public Entity {
 public:
 	// Methods
 	Drone(float x, float y);
+	~Drone() override = default;
 
 	void update() override;
 	void syncShape() override;

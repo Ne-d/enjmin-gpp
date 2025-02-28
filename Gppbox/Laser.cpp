@@ -1,19 +1,17 @@
 ﻿#include "Laser.hpp"
 
-#include <iostream>
-
 #include "C.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
 
-Laser::Laser(const sf::Vector2f position, const int direction)
+Laser::Laser(const Vector2f position, const int direction)
 	:
-	Entity(position.x, position.y, sf::RectangleShape{ { 1, 1 } }),
+	Entity(position.x, position.y, RectangleShape{ { 1, 1 } }),
 	direction(direction),
 	finishTimer(2500ms),
 	damageTimer(250ms) {
 	finishTimer.start();
-	shape.setFillColor(sf::Color::Green);
+	shape.setFillColor(Color::Green);
 }
 
 void Laser::update() {
@@ -62,12 +60,12 @@ void Laser::syncShape() {
 		length = -length - rx + 1;
 
 	shape.setPosition(
-		sf::Vector2f{ cx + rx, cy + ry } * (float)C::GRID_SIZE
+		Vector2f{ cx + rx, cy + ry } * (float)C::GRID_SIZE
 	);
-	shape.setSize(sf::Vector2f{ length, 0.5f } * (float)C::GRID_SIZE);
+	shape.setSize(Vector2f{ length, 0.5f } * (float)C::GRID_SIZE);
 }
 
-void Laser::damageEnemies() {
+void Laser::damageEnemies() const {
 	const Game* game = Game::instance;
 
 	for (auto* e : game->entities) {

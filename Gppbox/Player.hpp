@@ -9,6 +9,7 @@
 class Player : public Character {
 public:
 	explicit Player(float x, float y);
+	~Player() override = default;
 
 	void update() override;
 	void shoot();
@@ -18,7 +19,7 @@ public:
 	void syncShape() override;
 	void draw() const override;
 
-	std::optional<Enemy*> findClosestTarget();
+	std::optional<Enemy*> findClosestTarget() const;
 
 private:
 	// Methods

@@ -97,8 +97,7 @@ void Player::draw() const {
 	game->win->draw(shape);
 }
 
-// TODO: This might not actually find the closest enemy for some reason.
-std::optional<Enemy*> Player::findClosestTarget() {
+std::optional<Enemy*> Player::findClosestTarget() const {
 	Entity* closestEntity = nullptr;
 
 	const Vector2f position = { cx + rx, cy + ry };
@@ -128,20 +127,20 @@ void Player::pollInput() {
 	moveInput = 0;
 
 	// Controller Movement
-	float const stickValue = sf::Joystick::getAxisPosition(0, Joystick::Axis::X) / 100.0f;
+	float const stickValue = Joystick::getAxisPosition(0, Joystick::Axis::X) / 100.0f;
 	constexpr float stickDeadzone = 0.2f;
 
 	if (std::abs(stickValue) > stickDeadzone)
 		moveInput = lerpF(stickDeadzone * sign(stickValue), 1.0f, stickValue);
 
 	// Keyboard Movement
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+	if (Keyboard::isKeyPressed(Keyboard::Q))
 		moveInput -= 1;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	if (Keyboard::isKeyPressed(Keyboard::D))
 		moveInput += 1;
 
-	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Joystick::isButtonPressed(0, 0)) && isOnGround) {
+	if ((Keyboard::isKeyPressed(Keyboard::Space) || Joystick::isButtonPressed(0, 0)) && isOnGround) {
 		dy = -jumpImpulse;
 	}
 
@@ -149,8 +148,9 @@ void Player::pollInput() {
 	moveInput = std::clamp(moveInput, -1.0f, 1.0f);
 
 	// Pew pew
-	constexpr float triggerDeadzone = 50.0f;
 	if (!Game::instance->isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
+		constexpr float triggerDeadzone = 50.0f;
+		
 		if ((Mouse::isButtonPressed(Mouse::Left) || Joystick::getAxisPosition(0, Joystick::Axis::Z) < -triggerDeadzone)
 			&& shootTimer.isFinished()) {
 			shoot();

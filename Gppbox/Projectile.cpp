@@ -5,9 +5,9 @@
 #include "Game.hpp"
 #include "Math.hpp"
 
-Projectile::Projectile(const sf::Vector2f position, const sf::Vector2f velocity, const float damage)
+Projectile::Projectile(const Vector2f position, const Vector2f velocity, const float damage)
 	:
-	Entity(position.x, position.y, sf::RectangleShape({ C::GRID_SIZE / 2, C::GRID_SIZE / 2 })),
+	Entity(position.x, position.y, RectangleShape({ C::GRID_SIZE / 2, C::GRID_SIZE / 2 })),
 	damage(damage) {
 	type = EntityType::Projectile;
 	dx = velocity.x;

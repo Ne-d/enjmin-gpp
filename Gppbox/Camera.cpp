@@ -6,7 +6,7 @@ Camera::Camera(const sf::Vector2f position, const sf::Vector2f size)
 	:
 	view(sf::View(position, size)),
 	position(position),
-	size(size) {
+	size(size), screenShakeTimer(std::chrono::milliseconds(0)), screenShakeMagnitude(0) {
 }
 
 void Camera::update() {

@@ -50,6 +50,6 @@ private:
 	void cacheWallShape(sf::Vector2i position);
 	void cacheSpawnerShape(sf::Vector2i position);
 
-	std::optional<size_t> getWallIndex(sf::Vector2i pos) const;
-	std::optional<size_t> getSpawnerIndex(sf::Vector2i pos) const;
+	[[nodiscard]] std::optional<size_t> getWallIndex(sf::Vector2i pos) const;
+	[[nodiscard]] std::optional<size_t> getSpawnerIndex(sf::Vector2i pos) const;
 };

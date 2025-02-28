@@ -6,6 +6,8 @@ class Projectile : public Entity {
 public:
 	// Methods
 	Projectile(sf::Vector2f position, sf::Vector2f velocity, float damage);
+	~Projectile() override = default;
+	
 	void updatePosition();
 
 	void update() override;

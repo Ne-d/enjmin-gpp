@@ -61,7 +61,7 @@ bool Character::im() {
 
 		characterChanged |= ImGui::DragFloat("Acceleration", &accelerationFactor, 0.0001f, 0.0f, 10.0f);
 
-		Vector2f friction = sf::Vector2f(frictionX, frictionY);
+		Vector2f friction = Vector2f(frictionX, frictionY);
 		characterChanged |= ImGui::DragFloat2("Friction", &friction.x, 0.0001f, 0.0f, 10.0f);
 
 		characterChanged |= ImGui::DragFloat("Gravity", &gravity, 0.0001f, 0.0f, 10.0f);

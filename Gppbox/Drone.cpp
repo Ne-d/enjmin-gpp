@@ -8,7 +8,7 @@
 
 Drone::Drone(const float x, const float y)
 	:
-	Entity(x, y, sf::RectangleShape{ { 1 * C::GRID_SIZE, 1 * C::GRID_SIZE } }),
+	Entity(x, y, RectangleShape{ { 1 * C::GRID_SIZE, 1 * C::GRID_SIZE } }),
 	shootTimer(25ms) {
 	type = EntityType::Drone;
 	collisionWidth = 1;
@@ -33,7 +33,7 @@ void Drone::update() {
 	dy = lerpF(dy, desiredVelocity.y, acceleration);
 
 	// Teleport to player if too far away
-	float distanceToPlayer = distance(position, targetPosition);
+	float const distanceToPlayer = distance(position, targetPosition);
 	if (distanceToPlayer > teleportDistance)
 		setGridPosition(targetPosition.x, targetPosition.y);
 

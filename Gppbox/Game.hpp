@@ -22,18 +22,19 @@ class Game {
 
 public:
 	// Methods
-	explicit Game(sf::RenderWindow* win);
+	explicit Game(RenderWindow* win);
 	
 	bool hasCollision(int gridX, int gridY) const;
 	bool hasCollision(int gridX, int gridY, int width, int height) const;
 	std::optional<Entity*> hasCollisionWithEnemy(float x, float y) const;
-	
-	void processInput(sf::Event ev);
+
+	void processInput(const Event& ev);
 
 	void pollInput(double dt);
 	void onSpacePressed();
 
 	void spawnEnemies();
+	void removeEnemies();
 	void addProjectile(Projectile* projectile);
 	void update(double dt);
 
@@ -48,12 +49,12 @@ public:
 	double deltaTime;
 	double deltaFrame;
 
-	sf::RenderWindow* win = nullptr;
+	RenderWindow* win = nullptr;
 
-	sf::RectangleShape bg;
+	RectangleShape bg;
 	HotReloadShader* bgShader = nullptr;
 
-	sf::Texture tex;
+	Texture tex;
 
 	bool closing = false;
 

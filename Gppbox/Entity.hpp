@@ -15,8 +15,7 @@ class Entity
 public:
 	// Methods
 	explicit Entity(float x, float y, sf::RectangleShape shape);
-
-	void setPixelPosition(int x, int y);
+	virtual ~Entity() = default;
 	
 	void setGridPosition(float x, float y);
 	void setGridVelocity(float x, float y);

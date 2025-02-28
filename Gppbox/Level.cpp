@@ -66,6 +66,7 @@ void Level::loadFromFile(const std::string& filename) {
 	}
 
 	cacheShapes();
+	Game::instance->removeEnemies();
 	Game::instance->spawnEnemies();
 }
 
@@ -96,7 +97,7 @@ void Level::removeWall(const int x, const int y) {
 	}
 }
 
-void Level::removeSpawner(int x, int y) {
+void Level::removeSpawner(const int x, const int y) {
 	const auto spawnerIndex = getSpawnerIndex(Vector2i{ x, y });
 
 	if (spawnerIndex) {
@@ -110,31 +111,31 @@ void Level::removeTile(const int x, const int y) {
 	removeSpawner(x, y);
 }
 
-void Level::cacheWallShape(const sf::Vector2i position) {
-	sf::RectangleShape rect(sf::Vector2f(16, 16));
+void Level::cacheWallShape(const Vector2i position) {
+	RectangleShape rect(Vector2f(16, 16));
 	rect.setPosition((float)position.x * C::GRID_SIZE, (float)position.y * C::GRID_SIZE);
-	rect.setFillColor(sf::Color(128, 128, 128));
+	rect.setFillColor(Color(128, 128, 128));
 	wallShapes.push_back(rect);
 }
 
 void Level::cacheWallShapes() {
 	wallShapes.clear();
 
-	for (const sf::Vector2i w : walls)
+	for (const Vector2i w : walls)
 		cacheWallShape(w);
 }
 
-void Level::cacheSpawnerShape(const sf::Vector2i position) {
-	sf::RectangleShape rect(sf::Vector2f(16, 16));
+void Level::cacheSpawnerShape(const Vector2i position) {
+	RectangleShape rect(Vector2f(16, 16));
 	rect.setPosition((float)position.x * C::GRID_SIZE, (float)position.y * C::GRID_SIZE);
-	rect.setFillColor(sf::Color::Blue);
+	rect.setFillColor(Color::Blue);
 	spawnerShapes.push_back(rect);
 }
 
 void Level::cacheSpawnerShapes() {
 	spawnerShapes.clear();
 
-	for (const sf::Vector2i spawner : spawners)
+	for (const Vector2i spawner : spawners)
 		cacheSpawnerShape(spawner);
 }
 

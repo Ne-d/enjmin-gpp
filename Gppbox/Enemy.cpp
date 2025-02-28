@@ -1,7 +1,5 @@
 ﻿#include "Enemy.hpp"
 
-#include <iostream>
-
 #include "C.hpp"
 #include "Game.hpp"
 #include "Math.hpp"
@@ -36,6 +34,9 @@ void Enemy::takeDamage(const float damage, const float recoil) {
 				part.y = (cy + ry) * C::GRID_SIZE - 4 * y;
 				part.dx = random(-300.0f, 300.0f);
 				part.dy = -100 - abs(random(0, 200.0));
+
+				part.scaleX = 1.5;
+				part.scaleY = 1.5;
 
 				constexpr float friction = 0.3f;
 				constexpr float gravity = 500.0f;
