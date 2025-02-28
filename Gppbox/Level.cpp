@@ -66,6 +66,7 @@ void Level::loadFromFile(const std::string& filename) {
 	}
 
 	cacheShapes();
+	Game::instance->spawnEnemies();
 }
 
 void Level::addWall(const int x, const int y) {

@@ -46,7 +46,12 @@ void Player::shoot() {
 	const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
 	const float projectileY = cy + ry - 1;
 
-	game->addProjectile(new Projectile({ projectileX, projectileY }, { (float)lastDirection * projectileSpeed, 0 }, 1));
+	game->addProjectile(new Projectile(
+			{ projectileX, projectileY },
+			{ (float)lastDirection * projectileSpeed + random(-0.1, 0.1), random(-0.1, 0.1) }, 1
+		)
+	);
+	
 	dx -= lastDirection * 0.1;
 	game->camera.addScreenShake(3, { (float)-lastDirection, 0 }, 50ms);
 
@@ -71,6 +76,7 @@ void Player::shootLaser() {
 	const float laserY = cy + ry - 2;
 
 	game->entities.emplace_back(new Laser({ laserX, laserY }, lastDirection));
+	game->camera.addScreenShake(10, { 0, 0 }, 2500ms);
 }
 
 void Player::syncShape() {

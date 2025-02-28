@@ -97,6 +97,11 @@ void Drone::shoot() {
 	const float projectileX = cx + rx;
 	const float projectileY = cy + ry + 0.5;
 
-	game->addProjectile(new Projectile({ projectileX, projectileY }, direction * projectileSpeed, 0.1f));
+	game->addProjectile(new Projectile(
+			{ projectileX, projectileY },
+			{ direction.x * projectileSpeed + random(-0.15, 0.15), direction.y * projectileSpeed + random(-0.15, 0.15) },
+			0.1f
+		)
+	);
 	muzzleFlashShape.setRadius(muzzleFlashSize);
 }

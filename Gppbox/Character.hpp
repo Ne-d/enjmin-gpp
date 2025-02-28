@@ -6,7 +6,7 @@ class Character : public Entity {
 public:
 	explicit Character(float x, float y, int width, int height);
 
-	void takeDamage(float damage, float recoil);
+	virtual void takeDamage(float damage, float recoil);
 	
 	bool im() override;
 

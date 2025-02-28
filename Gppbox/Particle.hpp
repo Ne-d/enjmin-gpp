@@ -37,10 +37,10 @@ public:
 		life -= dt;
 		
 		el.setScale(scaleX, scaleY);
-		
+
 		bhv(this,dt);
 
-		if (el.getSize().x <= 0.1 || el.getSize().y <= 0.1) {
+		if (el.getScale().x <= 0.1 || el.getScale().y <= 0.1) {
 			destroyed = true;
 		}
 	}

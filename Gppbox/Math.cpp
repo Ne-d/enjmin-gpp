@@ -17,9 +17,7 @@ float sign(const float f) {
 }
 
 float random(const float min, const float max) {
-	static std::default_random_engine randomEngine;
-	static std::uniform_real_distribution<> distribution(min, max);
-	return distribution(randomEngine);
+	return min + (float)rand() * (max - min) / (float)RAND_MAX;
 }
 
 float distanceSquared(const sf::Vector2f a, const sf::Vector2f b) {

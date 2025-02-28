@@ -44,6 +44,8 @@ static int curDts = 0;
 
 int main()
 {
+	srand(time(NULL));
+	
     cout << "Hello World!\n";
 	
     //sf::RenderWindow window(sf::VideoMode(1920, 1080,32), "SFML works!");

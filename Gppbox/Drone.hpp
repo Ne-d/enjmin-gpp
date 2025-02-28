@@ -19,7 +19,7 @@ public:
 	float acceleration = 0.01;
 	float friction = 0.98;
 	float teleportDistance = 50.0f;
-	float projectileSpeed = 4;
+	float projectileSpeed = 1.5;
 
 	sf::Vector2f lastShootDirection;
 

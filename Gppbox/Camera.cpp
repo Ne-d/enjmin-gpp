@@ -14,7 +14,15 @@ void Camera::update() {
 	view.setSize(size);
 
 	if (!screenShakeTimer.isFinished()) {
-		const sf::Vector2f posDelta = random(0, screenShakeMagnitude) * screenShakeDirection;
+		sf::Vector2f posDelta;
+		if (screenShakeDirection == sf::Vector2f{ 0, 0 }) {
+			posDelta = random(0, screenShakeMagnitude) * sf::Vector2f{ 1, 0 };
+			posDelta += random(0, screenShakeMagnitude) * sf::Vector2f{ 0, 1 };
+		}
+		else {
+			posDelta = random(0, screenShakeMagnitude) * screenShakeDirection;
+		}
+		
 		view.setCenter(position + posDelta);
 	}
 }
