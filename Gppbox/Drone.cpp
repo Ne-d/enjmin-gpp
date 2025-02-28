@@ -61,7 +61,7 @@ void Drone::syncShape() {
 
 	shape.setPosition(
 		(cx + rx) * C::GRID_SIZE,
-		(cy + ry) * C::GRID_SIZE
+		(cy + ry - collisionHeight) * C::GRID_SIZE
 	);
 
 	const float x = cx + rx + 0.5f - (muzzleFlashShape.getRadius() / C::GRID_SIZE) + lastShootDirection.x / 2;

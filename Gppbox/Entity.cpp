@@ -75,7 +75,7 @@ void Entity::updatePositionWithCollision() {
 
 	// Y(-) Movement collisions
 	do {
-		if (game->hasCollision(cx, cy - 2, collisionWidth + 1, collisionHeight) && ry < 0.0f) {
+		if (game->hasCollision(cx, cy - 1, collisionWidth * 1, collisionHeight + 1) && ry < 0.0f) {
 			ry = 0.0f;
 			dy = 0.0f;
 		}

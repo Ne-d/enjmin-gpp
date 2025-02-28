@@ -53,7 +53,7 @@ void Player::shoot() {
 	);
 	
 	dx -= lastDirection * 0.1;
-	game->camera.addScreenShake(3, { (float)-lastDirection, 0 }, 50ms);
+	game->camera.addScreenShake(5, { (float)-lastDirection, 0 }, 75ms);
 
 	muzzleFlashShape.setRadius(muzzleFlashSize);
 }
@@ -76,7 +76,7 @@ void Player::shootLaser() {
 	const float laserY = cy + ry - 2;
 
 	game->entities.emplace_back(new Laser({ laserX, laserY }, lastDirection));
-	game->camera.addScreenShake(10, { 0, 0 }, 2500ms);
+	game->camera.addScreenShake(20, { 0, 0 }, 2500ms);
 }
 
 void Player::syncShape() {

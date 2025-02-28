@@ -62,7 +62,7 @@ void Missile::die() {
 	explosionShape.setRadius(explosionSize);
 
 	exploded = true;
-	Game::instance->camera.addScreenShake(5, { 0, 0 }, 600ms);
+	Game::instance->camera.addScreenShake(10, { 0, 0 }, 600ms);
 }
 
 void Missile::draw() const {
