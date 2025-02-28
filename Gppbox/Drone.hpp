@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Entity.hpp"
+#include "Timer.h"
 
 class Drone : public Entity {
 public:
@@ -25,4 +26,6 @@ public:
 	sf::CircleShape muzzleFlashShape;
 	float muzzleFlashSize = 10;
 	float muzzleFlashShrinkSpeed = 1.5f;
+
+	Timer shootTimer;
 };

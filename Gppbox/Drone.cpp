@@ -3,15 +3,17 @@
 
 #include "C.hpp"
 #include "Game.hpp"
+#include "imgui.h"
 #include "Math.hpp"
 
 Drone::Drone(const float x, const float y)
 	:
-	Entity(x, y, sf::RectangleShape{ { 1 * C::GRID_SIZE, 1 * C::GRID_SIZE } }) {
+	Entity(x, y, sf::RectangleShape{ { 1 * C::GRID_SIZE, 1 * C::GRID_SIZE } }),
+	shootTimer(25ms) {
 	type = EntityType::Drone;
 	collisionWidth = 1;
 	collisionHeight = 1;
-
+	
 	muzzleFlashShape.setFillColor(Color(255, 255, 64));
 }
 
@@ -35,12 +37,19 @@ void Drone::update() {
 	if (distanceToPlayer > teleportDistance)
 		setGridPosition(targetPosition.x, targetPosition.y);
 
-
 	// Apply movement
 	dx *= friction;
 	dy *= friction;
 
 	updatePositionWithCollision();
+
+	constexpr float triggerDeadzone = 50.0f;
+	if (!Game::instance->isEditingLevel && !ImGui::GetIO().WantCaptureMouse) {
+		if ((Mouse::isButtonPressed(Mouse::Left) || Joystick::getAxisPosition(0, Joystick::Axis::Z) < -triggerDeadzone)
+			&& shootTimer.isFinished()) {
+			shoot();
+		}
+	}
 
 	syncShape();
 
@@ -71,6 +80,7 @@ void Drone::draw() {
 }
 
 void Drone::shoot() {
+	shootTimer.start();
 	Game* const game = Game::instance;
 
 	const std::optional<Enemy*> optionalTarget = game->player->findClosestTarget();
@@ -87,6 +97,6 @@ void Drone::shoot() {
 	const float projectileX = cx + rx;
 	const float projectileY = cy + ry + 0.5;
 
-	game->addProjectile(new Projectile({ projectileX, projectileY }, direction * projectileSpeed, 1));
+	game->addProjectile(new Projectile({ projectileX, projectileY }, direction * projectileSpeed, 0.1f));
 	muzzleFlashShape.setRadius(muzzleFlashSize);
 }

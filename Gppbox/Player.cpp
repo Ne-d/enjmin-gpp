@@ -43,8 +43,6 @@ void Player::shoot() {
 	Game* const game = Game::instance;
 	shootTimer.start();
 
-	game->drone->shoot();
-
 	const float projectileX = cx + rx + (lastDirection == 1 ? 1 : 0.5);
 	const float projectileY = cy + ry - 1;
 
