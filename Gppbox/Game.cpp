@@ -198,7 +198,7 @@ void Game::draw(RenderWindow& win) {
 	level.draw(isEditingLevel);
 
 	player->draw();
-	win.draw(drone->shape);
+	drone->draw();
 	
 	for (const auto* const entity : entities)
 		win.draw(entity->shape);
