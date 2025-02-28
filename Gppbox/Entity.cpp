@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "imgui-SFML.h"
 #include "imgui.h"
+#include "Math.hpp"
 
 Entity::Entity(const float x, const float y, RectangleShape shape)
 	:
@@ -41,7 +42,7 @@ void Entity::updatePositionWithCollision() {
 	ry += dy * game->deltaFrame;
 
 	// Collisions
-	constexpr float collisionThresholdX = 0.0f;
+	constexpr float collisionThresholdX = 0.01f;
 
 	isOnLeftWall = false;
 	// X(-) Movement collisions
@@ -61,8 +62,8 @@ void Entity::updatePositionWithCollision() {
 	isOnRightWall = false;
 	// X(+) Movement collisions
 	do {
-		if (game->hasCollision(cx + 1, cy, collisionWidth, collisionHeight) && rx >= collisionThresholdX) {
-			rx = collisionThresholdX;
+		if (game->hasCollision(cx + 2, cy, collisionWidth, collisionHeight) && rx >= 1 - collisionThresholdX) {
+			rx = 1 - collisionThresholdX;
 			dx = 0.0f;
 			isOnRightWall = true;
 		}
@@ -72,7 +73,7 @@ void Entity::updatePositionWithCollision() {
 		}
 	}
 	while (rx > 1.0f);
-
+	
 	// Y(-) Movement collisions
 	do {
 		if (game->hasCollision(cx, cy - 1, collisionWidth * 1, collisionHeight + 1) && ry < 0.0f) {
@@ -88,7 +89,7 @@ void Entity::updatePositionWithCollision() {
 		}
 	}
 	while (ry < 0.0f);
-
+	
 	// Y(+) Movement collisions
 	do {
 		if (game->hasCollision(cx, cy + 1, collisionWidth + 1, collisionHeight) && ry >= 0.99f) {
